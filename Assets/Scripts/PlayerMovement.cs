@@ -1,5 +1,3 @@
-using System;
-using DefaultNamespace;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,8 +5,10 @@ public class PlayerMovement : MonoBehaviour
     private const float JumpForce = 7f;
     private const float SideStepMultiplier = 0.25f;
     private const float SpeedMultiplier = 2f;
-    
+    private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 0.271f, 0.340319f);
+
     [SerializeField] private Animator animator;
+    [SerializeField] private ResultScreen _resultScreen;
 
     private CharacterController _controller;
 
@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     private float _currentJump;
     private float _heightBeforeJump;
     private bool _doubleJump;
+    private int _deadMultiplier = 1;
+    private bool _stopMultiplier = true;
 
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Right = Animator.StringToHash("Right");
@@ -28,7 +30,22 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.P))
+        {
+            _stopMultiplier = !_stopMultiplier;
+        }
+
+        if (_stopMultiplier)
+        {
+            return;
+        }
+        
         Animations();
+        // Check for Restart
+        if (transform.position.y < _heightBeforeJump - 5.0f)
+        {
+            PlayerDead();
+        }
     }
 
     public Vector3 PlayerPos()
@@ -36,7 +53,6 @@ public class PlayerMovement : MonoBehaviour
         var position = transform.position;
         return _controller.isGrounded ? position : new Vector3(position.x, _heightBeforeJump, position.z);
     }
-    
     
     private void Animations()
     {
@@ -80,7 +96,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 moveVector = new Vector3((_sidestep - transform.position.x) * SideStepMultiplier, _currentJump* Time.deltaTime, SpeedMultiplier* Time.deltaTime);
+        if (_stopMultiplier)
+        {
+            return;
+        }
+        Vector3 moveVector = new Vector3((_sidestep - transform.position.x) * SideStepMultiplier, _currentJump* Time.deltaTime, _deadMultiplier * SpeedMultiplier* Time.deltaTime);
         _controller.Move(moveVector);
     }
 
@@ -91,6 +111,29 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        Destroy(gameObject);
+
+        PlayerDead();
+    }
+
+    public void ResetPlayer()
+    {
+        _deadMultiplier = 1;
+        _stopMultiplier = true;
+    }
+
+    public void PlayerDead()
+    {
+        if (_deadMultiplier == 0)
+        {
+            return;
+        }
+        
+        _deadMultiplier = 0;
+        _resultScreen.gameObject.SetActive(true);
+        _controller.enabled = false;
+        _controller.transform.position = StartPoint;
+        _controller.enabled = true;
+        _heightBeforeJump = transform.position.y;
+        _sidestep = 0;
     }
 }

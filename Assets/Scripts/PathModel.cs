@@ -12,31 +12,31 @@ public class PathModel : ScriptableObject
     private List<Cube> spawnedCubes;
     private Dictionary<int, List<Cube>> cubeMap;
     private Random _rnd;
+    private GameObject path;
 
     public enum Prefabtype
     {
         Cube,
         Pyramid
     }
-        
-        
-
+    
     public void Init()
     {
         spawnedCubes = new List<Cube>();
         cubeMap = new Dictionary<int, List<Cube>>();
         _rnd = new Random();
+        path  = new GameObject("Path");
     }
 
     public void CreateObject(Prefabtype prefabType, Vector3 position)
     {
         if (prefabType.Equals(Prefabtype.Pyramid))
         {
-            var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(45,0,45));
+            var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(45,0,45), path.transform);
             pyramid.Init(_rnd.NextDouble());
             return;
         }
-        var obj = Instantiate(cubePrefab, position, Quaternion.identity);
+        var obj = Instantiate(cubePrefab, position, Quaternion.identity, path.transform);
             
         obj.Init(_rnd.NextDouble());
         spawnedCubes.Add(obj);
@@ -49,5 +49,14 @@ public class PathModel : ScriptableObject
         {
             cubeMap.Add(z, new List<Cube>{obj});
         }
+    }
+
+    public void ResetModel()
+    {
+        foreach (Transform child in path.transform) {
+            Destroy(child.gameObject);
+        }
+        cubeMap.Clear();
+        spawnedCubes.Clear();
     }
 }
