@@ -8,7 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 0.271f, 0.340319f);
 
     [SerializeField] private Animator animator;
-    [SerializeField] private ResultScreen _resultScreen;
+    [SerializeField] private ResultScreen resultScreen;
+    [SerializeField] private PointsObject pointsObject;
 
     private CharacterController _controller;
 
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _doubleJump;
     private int _deadMultiplier = 1;
     private bool _stopMultiplier = true;
+    public int nextPoint = 5;
 
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Right = Animator.StringToHash("Right");
@@ -30,6 +32,11 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
+        if (transform.position.z > nextPoint)
+        {
+            pointsObject.AddPoints(1);
+            nextPoint++;
+        }
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.P))
         {
             _stopMultiplier = !_stopMultiplier;
@@ -70,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
                 if (!_doubleJump)
                 {
                     animator.SetTrigger(Jump);
-                    _currentJump += JumpForce;
+                    _currentJump = JumpForce;
                     _doubleJump = true;
                 }
             }
@@ -119,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _deadMultiplier = 1;
         _stopMultiplier = true;
+        nextPoint = 5;
     }
 
     public void PlayerDead()
@@ -129,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
         _deadMultiplier = 0;
-        _resultScreen.gameObject.SetActive(true);
+        resultScreen.gameObject.SetActive(true);
         _controller.enabled = false;
         _controller.transform.position = StartPoint;
         _controller.enabled = true;

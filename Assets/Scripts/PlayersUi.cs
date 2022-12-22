@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class PlayersUi : MonoBehaviour
 {
     public TextMeshProUGUI currentPoints;
     public PlayerMovement player;
+    [SerializeField] private PointsObject pointsObject;
 
     private void Awake()
     {
@@ -18,6 +20,6 @@ public class PlayersUi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentPoints.text = "Points: " + (int) player.PlayerPos().z;
+        currentPoints.text = "Points: " + pointsObject.GetPoints();
     }
 }
