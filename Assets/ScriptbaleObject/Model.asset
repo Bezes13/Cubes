@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Model
   m_EditorClassIdentifier: 
   cubePrefab: {fileID: 5089431689299891775, guid: a07f3a2a2a5504b42bb1a9750ce6a109, type: 3}
-  pyramidPrefab: {fileID: 7075613174587433543, guid: 9c7934a224a184aa4a41076cd67e4c6d, type: 3}
-  path: {fileID: 4377595507536693479, guid: 8b2a8b1ff57dd4b609822081307fce21, type: 3}
+  pyramidPrefab: {fileID: 1149003843474700616, guid: f5b099e6487383d4f8661e894b5d3f64, type: 3}
+  path: {fileID: 0}

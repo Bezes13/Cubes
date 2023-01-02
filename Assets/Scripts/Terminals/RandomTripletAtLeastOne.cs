@@ -1,40 +1,46 @@
 using UnityEngine;
-using Random = System.Random;
 namespace Terminals
 {
     public class RandomTripletAtLeastOne : Terminal
     {
-        private readonly Random _rnd;
-        public RandomTripletAtLeastOne(PathModel pathModel) : base(pathModel)
+        private float _difficulty;
+
+        public RandomTripletAtLeastOne(PathModel pathModel, float difficulty) : base(pathModel)
         {
-            _rnd = new Random();
+            _difficulty = difficulty;
         }
 
         public override Vector3 Create(Vector3 start)
         {
             var onePlaced = RandomTile(start);
-            onePlaced = onePlaced || RandomTile(start + Vector3.right);
-            onePlaced = onePlaced || RandomTile(start + Vector3.left);
+            onePlaced = RandomTile(start + Vector3.right) || onePlaced;
+            onePlaced = RandomTile(start + Vector3.left) || onePlaced;
 
             if (!onePlaced)
             {
-                PathModel.CreateObject(PathModel.Prefabtype.Cube, start);
-
+                float rnd = Random.value;
+                Vector3 pos = rnd > 0.66 ? Vector3.zero : rnd < 0.33 ? Vector3.right : Vector3.left;
+                PathModel.CreateObject(PathModel.Prefabtype.Cube, start + pos);
             }
             return start + Vector3.forward;
         }
         
         private bool RandomTile(Vector3 pos)
         {
-            var rnd = _rnd.NextDouble();
-            if (rnd <= 0.2)
+            
+            if (Random.value <= 0.3 + _difficulty)
             {
                 return false;
             }
-
+          
             PathModel.CreateObject(PathModel.Prefabtype.Cube, pos);
 
             return true;
+        }
+        
+        public void Increase(float difficulty)
+        {
+            _difficulty = difficulty;
         }
     }
 }

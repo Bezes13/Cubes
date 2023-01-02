@@ -14,7 +14,7 @@ namespace Terminals
         public override Vector3 Create(Vector3 start)
         {
             PathModel.CreateObject(PathModel.Prefabtype.Cube, start);
-            PathModel.CreateObject(PathModel.Prefabtype.Pyramid, start + new Vector3(0, 0.4f,0));
+            PathModel.CreateObject(PathModel.Prefabtype.Pyramid, start + new Vector3(0, 0.5f,0));
             return start + Vector3.forward;
         }
     }

@@ -1,10 +1,10 @@
-using DefaultNamespace;
 using UnityEngine;
 
 public class Pyramid : MonoBehaviour
 {
-    private PlayerMovement _player;
-    private PathGenerator _pathGenerator;
+    public PlayerMovement player;
+    public PathGenerator pathGenerator;
+    public PathModel pathModel;
     private bool _dieHard;
         
     private double _seed;
@@ -19,13 +19,13 @@ public class Pyramid : MonoBehaviour
     {
         _dieHard = true;
         Destroy(gameObject, 1f);
-        _pathGenerator.ContinuePath();
+        pathGenerator.ContinuePath();
     }
 
     private void Awake()
     {
-        _player = FindObjectOfType<PlayerMovement>();
-        _pathGenerator = FindObjectOfType<PathGenerator>();
+        player = FindObjectOfType<PlayerMovement>();
+        pathGenerator = FindObjectOfType<PathGenerator>();
     }
 
     private void Update()
@@ -38,7 +38,7 @@ public class Pyramid : MonoBehaviour
         }
         else
         {
-            if (_player.PlayerPos().z > transform.position.z + 1 + _seed)
+            if (player.PlayerPos().z > transform.position.z + 1 + _seed)
             {
                 DieHard();
             }

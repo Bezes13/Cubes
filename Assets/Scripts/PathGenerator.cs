@@ -1,66 +1,51 @@
-using System;
+using NonTerminals;
 using Terminals;
 using UnityEngine;
-using Random = System.Random;
+using Random = UnityEngine.Random;
 
 public class PathGenerator : MonoBehaviour
 {
-    public PathModel PathModel;
+    private const int MinPathElementCount = 100;
+    public PathModel pathModel;
+    public PointsObject PointsObject;
     private Vector3 _start;
-    private Random _rnd;
     private Vector3 _nextPoint;
-
+    
     private void Awake()
     {
-        PathModel.Init();
-        _rnd = new Random();
+        pathModel.Init();
         _start = new Vector3(0, 0.5f, 5);
         CreatePath();
     }
 
+    private void Update()
+    {
+        float difficulty = PointsObject.GetPoints() / 1000f;
+        pathModel.RandomTripletAtLeastOne.Increase(difficulty);
+    }
+
     public void ContinuePath()
     {
-        _nextPoint = ChooseYourWeapon(_nextPoint);
+        if (pathModel.path.transform.childCount < MinPathElementCount)
+        {
+            _nextPoint = pathModel.Chaos.Create(_nextPoint);   
+        }
     }
-        
+
     public void CreatePath()
     {
-        new TripleBlock(PathModel).Create(_start + new Vector3(0, 0, 0));
-        _nextPoint = ChooseYourWeapon(_start + new Vector3(0, 0, 1));
-        int i = 0;
-        while (i < 10)
-        {
-            _nextPoint = ChooseYourWeapon(_nextPoint);
-            i++;
-        }
+        new TripleBlock(pathModel).Create(_start + new Vector3(0, 0, 0));
+        _nextPoint = new JustTriplets(pathModel).Create(_start + new Vector3(0, 0, 1));
     }
         
 
     private Vector3 ChooseYourWeapon(Vector3 vec)
     {
-        Double rnd = _rnd.NextDouble();
-        if (rnd <= 0.1)
+        if (Random.value <= 0.3)
         {
-            return new UpStairs(PathModel).Create(vec);
+            return new JustTriplets(pathModel).Create(vec);
         }
-
-        if (rnd >= 0.9)
-        {
-            return new SingleBlock(PathModel).Create(vec);
-        }
-        if (rnd >= 0.8)
-        {
-            return new RightSweep(PathModel).Create(vec);
-        }
-        if (rnd >= 0.7)
-        {
-            return new LeftSweep(PathModel).Create(vec);
-        }
-        if (rnd >= 0.6)
-        {
-            return new SingleSpike(PathModel).Create(vec);
-        }
-
-        return new TripleBlock(PathModel).Create(vec);
+        
+        return new Chaos(pathModel).Create(vec);
     }
 }

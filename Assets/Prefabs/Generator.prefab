@@ -43,4 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020dc652b0dc4f12957e9a8eb4253ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PathModel: {fileID: 11400000, guid: cc2d4ba08eacf49d5b18d812322d345f, type: 2}
+  pathModel: {fileID: 11400000, guid: cc2d4ba08eacf49d5b18d812322d345f, type: 2}
+  PointsObject: {fileID: 11400000, guid: a8d0da9843b29458f9cebf8fac11cff0, type: 2}

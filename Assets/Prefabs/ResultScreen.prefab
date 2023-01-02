@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.60714287, y: 0.5}
-  m_AnchoredPosition: {x: 27.5, y: 4}
-  m_SizeDelta: {x: 55, y: 8}
+  m_AnchoredPosition: {x: 33.265923, y: 4}
+  m_SizeDelta: {x: 66.5319, y: 8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &213118951
 CanvasRenderer:
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -8.232609, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -304,8 +304,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 496, y: 111}
-  m_SizeDelta: {x: 77.9067, y: 30}
+  m_AnchoredPosition: {x: 541.15234, y: 111}
+  m_SizeDelta: {x: 104.5321, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &910062986
 CanvasRenderer:
@@ -1035,7 +1035,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter text...
+  m_text: Enter Name...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1482,7 +1482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1590,7 +1590,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You got 99 Points, Tschakalaka
+  m_text: You got 999 Points. Tschakalaka!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -0.02893069, y: -0.63285446, z: 33.821533, w: 0}
+  m_margin: {x: -15.654892, y: -12.942425, z: 18.8378, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2041,7 +2041,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &126630736326349671
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2143,17 +2143,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   result: {fileID: 7436164785068921688}
   player: {fileID: 0}
-  Names:
+  names:
   - {fileID: 1370386004}
   - {fileID: 1497906218}
   - {fileID: 1204291421}
-  Scores:
+  scores:
   - {fileID: 225392676}
   - {fileID: 1396929963}
   - {fileID: 1836494865}
   pathModel: {fileID: 11400000, guid: cc2d4ba08eacf49d5b18d812322d345f, type: 2}
   generator: {fileID: 0}
-  PointsObject: {fileID: 11400000, guid: a8d0da9843b29458f9cebf8fac11cff0, type: 2}
+  pointsObject: {fileID: 11400000, guid: a8d0da9843b29458f9cebf8fac11cff0, type: 2}
 --- !u!1 &8912464584002714096
 GameObject:
   m_ObjectHideFlags: 0
