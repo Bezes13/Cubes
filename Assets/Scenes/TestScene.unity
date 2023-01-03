@@ -803,10 +803,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPoints: {fileID: 868896947}
-  PathWarning: {fileID: 301395502}
-  player: {fileID: 1124073480}
+  pathWarning: {fileID: 301395502}
   pointsObject: {fileID: 11400000, guid: a8d0da9843b29458f9cebf8fac11cff0, type: 2}
-  pathModel: {fileID: 0}
+  pathModel: {fileID: 11400000, guid: cc2d4ba08eacf49d5b18d812322d345f, type: 2}
 --- !u!114 &1219613372
 MonoBehaviour:
   m_ObjectHideFlags: 0
