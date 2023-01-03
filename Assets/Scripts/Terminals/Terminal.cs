@@ -12,6 +12,6 @@ namespace Terminals
             PathModel = pathModel;
         }
 
-        public abstract Vector3 Create(Vector3 start);
+        public abstract Vector3 Create(Vector3 start, int pathNumber);
     }
 }

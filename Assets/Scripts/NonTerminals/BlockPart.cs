@@ -8,12 +8,12 @@ namespace NonTerminals
         {
         }
 
-        public override Vector3 Create(Vector3 start)
+        public override Vector3 Create(Vector3 start, int pathNumber)
         {
-            Vector3 next = PathModel.RandomTripletAtLeastOne.Create(start);
-            next = PathModel.HoleOrBlock.Create(next);
-            next = PathModel.HoleOrBlock.Create(next);
-            next = PathModel.RandomTripletAtLeastOne.Create(next);
+            Vector3 next = PathModel.RandomTripletAtLeastOne.Create(start, pathNumber);
+            next = PathModel.HoleOrBlock.Create(next, pathNumber);
+            next = PathModel.HoleOrBlock.Create(next, pathNumber);
+            next = PathModel.RandomTripletAtLeastOne.Create(next, pathNumber);
             return next;
         }
     }

@@ -12,9 +12,11 @@ public class PathModel : ScriptableObject
 {
     [SerializeField] private Cube cubePrefab;
     [SerializeField] private Pyramid pyramidPrefab;
+    [SerializeField] private PathGenerator pathGenerator;
     
     private Random _rnd;
     public GameObject path;
+    public GameObject secondPath;
     
     // NonTerminals
     public Chaos Chaos;
@@ -25,6 +27,7 @@ public class PathModel : ScriptableObject
     public AfterSpikeOrHole AfterSpikeOrHole;
     public LineOrChaos LineOrChaos;
     public NoHoleOrSpike NoHoleOrSpike;
+    public PathSplitter PathSplitter;
     
     // Terminals
     public List<Terminal> Terminals;
@@ -45,8 +48,10 @@ public class PathModel : ScriptableObject
     
     public void Init()
     {
+        pathGenerator = FindObjectOfType<PathGenerator>();
         _rnd = new Random();
         path  = new GameObject("Path");
+        secondPath  = new GameObject("Path2");
         Terminals = new List<Terminal>();
         RandomTripletAtLeastOne = new RandomTripletAtLeastOne(this, 0);
         Hole = new Hole(this);
@@ -65,6 +70,7 @@ public class PathModel : ScriptableObject
         SingleSpike = new SingleSpike(this);
         TripleBlock = new TripleBlock(this);
         UpStairs = new UpStairs(this);
+        PathSplitter = new PathSplitter(this, pathGenerator);
         
         Terminals.Add(new LeftSweep(this));
         Terminals.Add(new RightSweep(this));
@@ -87,15 +93,16 @@ public class PathModel : ScriptableObject
         return terminal;
     }
 
-    public void CreateObject(Prefabtype prefabType, Vector3 position)
+    public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber)
     {
+        var parent = pathNumber == 0 ? path.transform : secondPath.transform;
         if (prefabType.Equals(Prefabtype.Pyramid))
         {
-            var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(0,0,0), path.transform);
+            var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(0,0,0), parent);
             pyramid.Init(_rnd.NextDouble());
             return;
         }
-        var obj = Instantiate(cubePrefab, position, Quaternion.identity, path.transform);
+        var obj = Instantiate(cubePrefab, position, Quaternion.identity, parent);
             
         obj.Init(_rnd.NextDouble());
     }
@@ -106,6 +113,14 @@ public class PathModel : ScriptableObject
     {
         foreach (Transform child in path.transform) {
             Destroy(child.gameObject);
+        }
+    }
+
+    public void DestroyPath()
+    {
+        foreach (Transform child in path.transform) {
+            child.GetComponent<Cube>().DieHard();
+            child.GetComponent<Pyramid>().DieHard();
         }
     }
 }

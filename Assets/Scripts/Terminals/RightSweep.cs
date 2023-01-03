@@ -9,11 +9,11 @@ namespace Terminals
         {
         }
 
-        public override Vector3 Create(Vector3 start)
+        public override Vector3 Create(Vector3 start, int pathNumber)
         {
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start);
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.right);
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.right * 2);
+            PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber);
+            PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.right, pathNumber);
+            PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.right * 2, pathNumber);
             return start + Vector3.right * 2;
         }
     }

@@ -8,7 +8,7 @@ namespace NonTerminals
         {
         }
 
-        public override Vector3 Create(Vector3 start)
+        public override Vector3 Create(Vector3 start, int pathNumber)
         {
             var rnd = Random.value;
             var switchCase = rnd <= 0.05 ? PathPart.LeftSweep :
@@ -23,29 +23,29 @@ namespace NonTerminals
             switch (switchCase)
             {
                 case PathPart.LeftSweep: 
-                    start = PathModel.LeftSweep.Create(start);
-                    return PathModel.AfterSweep.Create(start);
+                    start = PathModel.LeftSweep.Create(start, pathNumber);
+                    return PathModel.AfterSweep.Create(start, pathNumber);
                 case PathPart.RightSweep: 
-                    start = PathModel.RightSweep.Create(start);
-                    return PathModel.AfterSweep.Create(start);
+                    start = PathModel.RightSweep.Create(start, pathNumber);
+                    return PathModel.AfterSweep.Create(start, pathNumber);
                 case PathPart.Hole: 
-                    start = PathModel.Hole.Create(start);
-                    return PathModel.NoHoleOrSpike.Create(start);
+                    start = PathModel.Hole.Create(start, pathNumber);
+                    return PathModel.NoHoleOrSpike.Create(start, pathNumber);
                 case PathPart.SingleSpike: 
-                    start = PathModel.SingleSpike.Create(start);
-                    return PathModel.NoHoleOrSpike.Create(start);
+                    start = PathModel.SingleSpike.Create(start, pathNumber);
+                    return PathModel.NoHoleOrSpike.Create(start, pathNumber);
                 case PathPart.SingleBlock: 
-                    start = PathModel.SingleBlock.Create(start);
+                    start = PathModel.SingleBlock.Create(start, pathNumber);
                     return start;
                 case PathPart.TripleBlock: 
-                    start = PathModel.TripleBlock.Create(start);
+                    start = PathModel.TripleBlock.Create(start, pathNumber);
                     return start;
                 case PathPart.UpStairs: 
-                    start = PathModel.UpStairs.Create(start);
+                    start = PathModel.UpStairs.Create(start, pathNumber);
                     return start;
                 case PathPart.JustTriples:
-                    start = PathModel.JustTriplets.Create(start);
-                    return PathModel.LineOrChaos.Create(start);
+                    start = PathModel.JustTriplets.Create(start, pathNumber);
+                    return PathModel.LineOrChaos.Create(start, pathNumber);
             }
 
             return start;

@@ -15,7 +15,7 @@ public class Cube : MonoBehaviour
     {
         _seed = seed;
     }
-    private void DieHard()
+    public void DieHard()
     {
         _dieHard = true;
         Destroy(gameObject, 1f);

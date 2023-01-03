@@ -1,0 +1,20 @@
+using UnityEngine;
+
+namespace NonTerminals
+{
+    public class PathSplitter : NonTerminal
+    {
+        private readonly PathGenerator _pathGenerator;
+
+        public PathSplitter(PathModel pathModel, PathGenerator pathGenerator) : base(pathModel)
+        {
+            _pathGenerator = pathGenerator;
+        }
+
+        public override Vector3 Create(Vector3 start, int pathNumber)
+        {
+            _pathGenerator.CreateSecondPath(PathModel.LeftSweep.Create(start, pathNumber));
+            return PathModel.RightSweep.Create(start, pathNumber);
+        }
+    }
+}

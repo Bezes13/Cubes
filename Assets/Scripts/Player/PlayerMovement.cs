@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
     
     private void Animations()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (_controller.isGrounded)
             {

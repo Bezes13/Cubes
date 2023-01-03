@@ -10,22 +10,22 @@ namespace Terminals
             _difficulty = difficulty;
         }
 
-        public override Vector3 Create(Vector3 start)
+        public override Vector3 Create(Vector3 start, int pathNumber)
         {
-            var onePlaced = RandomTile(start);
-            onePlaced = RandomTile(start + Vector3.right) || onePlaced;
-            onePlaced = RandomTile(start + Vector3.left) || onePlaced;
+            var onePlaced = RandomTile(start, pathNumber);
+            onePlaced = RandomTile(start + Vector3.right, pathNumber) || onePlaced;
+            onePlaced = RandomTile(start + Vector3.left, pathNumber) || onePlaced;
 
             if (!onePlaced)
             {
                 float rnd = Random.value;
                 Vector3 pos = rnd > 0.66 ? Vector3.zero : rnd < 0.33 ? Vector3.right : Vector3.left;
-                PathModel.CreateObject(PathModel.Prefabtype.Cube, start + pos);
+                PathModel.CreateObject(PathModel.Prefabtype.Cube, start + pos, pathNumber);
             }
             return start + Vector3.forward;
         }
         
-        private bool RandomTile(Vector3 pos)
+        private bool RandomTile(Vector3 pos, int pathNumber)
         {
             
             if (Random.value <= 0.3 + _difficulty)
@@ -33,7 +33,7 @@ namespace Terminals
                 return false;
             }
           
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, pos);
+            PathModel.CreateObject(PathModel.Prefabtype.Cube, pos, pathNumber);
 
             return true;
         }

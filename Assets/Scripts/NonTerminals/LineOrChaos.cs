@@ -8,7 +8,7 @@ namespace NonTerminals
         {
         }
 
-        public override Vector3 Create(Vector3 start)
+        public override Vector3 Create(Vector3 start, int pathNumber)
         {
             var rnd = Random.value;
             var switchCase = rnd <= 0.7 ? PathPart.Chaos : PathPart.JustTriples; 
@@ -18,7 +18,7 @@ namespace NonTerminals
                 case PathPart.Chaos:
                     return start;
                 case PathPart.JustTriples:
-                    return PathModel.JustTriplets.Create(start);
+                    return PathModel.JustTriplets.Create(start, pathNumber);
             }
 
             return start;
