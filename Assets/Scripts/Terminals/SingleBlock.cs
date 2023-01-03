@@ -7,7 +7,7 @@ namespace Terminals
     {
         public override Vector3 Create(Vector3 start, int pathNumber)
         {
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber);
+            PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber, true);
             return start + new Vector3(0, 0, 1);
         }
 

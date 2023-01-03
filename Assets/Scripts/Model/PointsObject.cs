@@ -10,9 +10,8 @@ public class PointsObject : ScriptableObject
     private const string HighScore2Name = "highScore2Name";
     private const string HighScore3Name = "highScore3Name";
 
-    private int _points = 0;
-    private int rank;
-    public string PlayerName { get; set; }
+    private int _points;
+    private int _rank;
 
     public int GetPoints()
     {
@@ -26,7 +25,7 @@ public class PointsObject : ScriptableObject
 
     public void AddScore(int score = -1)
     {
-        rank = -1;
+        _rank = -1;
         if (score == -1)
         {
             score = _points;
@@ -34,7 +33,7 @@ public class PointsObject : ScriptableObject
         var highscore = PlayerPrefs.GetInt(HighScore1);
         if (score > highscore)
         {
-            rank = 1;
+            _rank = 1;
             PlayerPrefs.SetInt(HighScore3, PlayerPrefs.GetInt(HighScore2));
             PlayerPrefs.SetString(HighScore3Name, PlayerPrefs.GetString(HighScore2Name));
             PlayerPrefs.SetInt(HighScore2, highscore);
@@ -47,7 +46,7 @@ public class PointsObject : ScriptableObject
             highscore = PlayerPrefs.GetInt(HighScore2);
             if (score > highscore)
             {
-                rank = 2;
+                _rank = 2;
                 PlayerPrefs.SetInt(HighScore3, highscore);
                 PlayerPrefs.SetString(HighScore3Name, PlayerPrefs.GetString(HighScore2Name));
                 PlayerPrefs.SetInt(HighScore2, score);
@@ -59,7 +58,7 @@ public class PointsObject : ScriptableObject
                 highscore = PlayerPrefs.GetInt(HighScore3);
                 if (score > highscore)
                 {
-                    rank = 3;
+                    _rank = 3;
                     PlayerPrefs.SetInt(HighScore3, score);
                     PlayerPrefs.SetString(HighScore3Name, "Player");
                 }
@@ -80,18 +79,18 @@ public class PointsObject : ScriptableObject
             {
                 Name   = PlayerPrefs.GetString(HighScore1Name),
                 Points = PlayerPrefs.GetInt(HighScore1),
-                New = 1 == rank
+                New = 1 == _rank
                 
             },new HighScoreEntry()
             {
                 Name   = PlayerPrefs.GetString(HighScore2Name),
                 Points = PlayerPrefs.GetInt(HighScore2),
-                New = 2 == rank
+                New = 2 == _rank
             },new HighScoreEntry()
             {
                 Name   = PlayerPrefs.GetString(HighScore3Name),
                 Points = PlayerPrefs.GetInt(HighScore3),
-                New = 3 == rank
+                New = 3 == _rank
             }};
     }
 

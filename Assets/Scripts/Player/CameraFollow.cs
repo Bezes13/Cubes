@@ -20,8 +20,8 @@ public class CameraFollow : MonoBehaviour
             _central = !_central;
             transform.rotation = _central ? Quaternion.Euler(18, 0, 0) :Quaternion.Euler(18, -9, 0);
         }
-        Vector3 player = this.player.PlayerPos();
-        Vector3 newPos = new Vector3(player.x + (_central ? 0 : 1.18f), player.y + 5.33f, player.z - 6.31f);
+        Vector3 playerPos = player.PlayerPos();
+        Vector3 newPos = new Vector3(playerPos.x + (_central ? 0 : 1.18f), playerPos.y + 5.33f, playerPos.z - 6.31f);
         transform.position = Vector3.Lerp(transform.position, newPos, Time.deltaTime);
     }
 }

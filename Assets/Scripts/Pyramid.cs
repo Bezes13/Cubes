@@ -10,7 +10,7 @@ public class Pyramid : MonoBehaviour
     private double _seed;
     private const float FallSpeed = 2;
 
-    public void Init(double seed)
+    public void Init(double seed, bool split = false)
     {
         _seed = seed;
             

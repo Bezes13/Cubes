@@ -13,8 +13,9 @@ namespace NonTerminals
 
         public override Vector3 Create(Vector3 start, int pathNumber)
         {
-            _pathGenerator.CreateSecondPath(PathModel.LeftSweep.Create(start, pathNumber));
-            return PathModel.RightSweep.Create(start, pathNumber);
+            PathModel.SingleBlock.Create(start, pathNumber);
+            _pathGenerator.CreateSecondPath(PathModel.LeftSweep.Create(start + Vector3.forward, pathNumber));
+            return PathModel.RightSweep.Create(start + Vector3.forward, pathNumber);
         }
     }
 }

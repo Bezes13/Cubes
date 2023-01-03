@@ -34,10 +34,9 @@ namespace NonTerminals
                 rnd <= 0.1 ? PathPart.RightSweep :
                 rnd <= 0.15 ? PathPart.Hole :
                 rnd <= 0.2 ? PathPart.SingleSpike :
-                rnd <= 0.25 ? PathPart.SingleBlock :
-                rnd <= 0.3 ? PathPart.UpStairs :
-                rnd <= 0.35 ? PathPart.JustTriples : 
-                rnd <= 0.4 ? PathPart.PathSplitter : PathPart.TripleBlock; 
+                rnd <= 0.25 ? PathPart.UpStairs :
+                rnd <= 0.3 ? PathPart.JustTriples : 
+                rnd <= 0.35 ? PathPart.PathSplitter : PathPart.TripleBlock; 
             
 
             switch (switchCase)
@@ -54,9 +53,6 @@ namespace NonTerminals
                 case PathPart.SingleSpike: 
                     start = PathModel.SingleSpike.Create(start, pathNumber);
                     return PathModel.AfterSpikeOrHole.Create(start, pathNumber);
-                case PathPart.SingleBlock: 
-                    start = PathModel.SingleBlock.Create(start, pathNumber);
-                    return start;
                 case PathPart.TripleBlock: 
                     start = PathModel.TripleBlock.Create(start, pathNumber);
                     return start;

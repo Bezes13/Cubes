@@ -1,4 +1,5 @@
 using System;
+using Signals;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -10,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _lastPosition = new Vector3(0,0,-1);
 
     [SerializeField] private Animator animator;
-    [SerializeField] private ResultScreen resultScreen;
     [SerializeField] private PointsObject pointsObject;
 
     private CharacterController _controller;
@@ -154,7 +154,8 @@ public class PlayerMovement : MonoBehaviour
         }
         
         _deadMultiplier = 0;
-        resultScreen.gameObject.SetActive(true);
+        Supyrb.Signals.Get<PlayerDeadSignal>().Dispatch();
+        //resultScreen.gameObject.SetActive(true);
         _controller.enabled = false;
         _controller.transform.position = StartPoint;
         _controller.enabled = true;

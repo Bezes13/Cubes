@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DefaultNamespace;
 using NonTerminals;
 using Terminals;
 using UnityEngine;
@@ -81,33 +78,20 @@ public class PathModel : ScriptableObject
         Terminals.Add(Hole);
         Terminals.Add(RandomTripletAtLeastOne);
     }
-    
-    public Terminal AllButNotOne(Type notIncluded)
-    {
-        Terminal terminal = Terminals[UnityEngine.Random.Range(0, Terminals.Count - 1)];
-        while (terminal.GetType() == notIncluded)
-        {
-            terminal = Terminals[UnityEngine.Random.Range(0, Terminals.Count - 1)];
-        }
 
-        return terminal;
-    }
-
-    public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber)
+    public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber, bool split = false)
     {
         var parent = pathNumber == 0 ? path.transform : secondPath.transform;
         if (prefabType.Equals(Prefabtype.Pyramid))
         {
             var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(0,0,0), parent);
-            pyramid.Init(_rnd.NextDouble());
+            pyramid.Init(_rnd.NextDouble(), split);
             return;
         }
         var obj = Instantiate(cubePrefab, position, Quaternion.identity, parent);
             
-        obj.Init(_rnd.NextDouble());
+        obj.Init(_rnd.NextDouble(), split);
     }
-
-    private const int MaxElements = 100;
 
     public void ResetModel()
     {
@@ -119,8 +103,8 @@ public class PathModel : ScriptableObject
     public void DestroyPath()
     {
         foreach (Transform child in path.transform) {
-            child.GetComponent<Cube>().DieHard();
-            child.GetComponent<Pyramid>().DieHard();
+            child.GetComponent<Cube>()?.DieHard();
+            child.GetComponent<Pyramid>()?.DieHard();
         }
     }
 }
