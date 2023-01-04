@@ -1,6 +1,8 @@
+using Model;
 using Signals;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -20,18 +22,32 @@ namespace UI
                 private TextMeshProUGUI[] names;
                 [SerializeField]
                 private TextMeshProUGUI[] scores;
-                
+                [SerializeField]
+                private Text startButton;
+                [SerializeField]
+                private GameObject Image;
+                [SerializeField]
+                private TMP_InputField inputField;
+
                 private int _newRank;
 
                 private void Awake()
                 {
                         Supyrb.Signals.Get<PlayerDeadSignal>().AddListener(ShowScreen);
-                        gameObject.SetActive(false);
+                        startButton.text = "Start";
+                        result.gameObject.SetActive(false);
+                        Image.SetActive(false);
+                        inputField.gameObject.SetActive(false);
+                        //pathModel.Init();
                 }
 
                 private void ShowScreen()
                 {
                         gameObject.SetActive(true);
+                        startButton.text = "Restart";
+                        result.gameObject.SetActive(true);
+                        Image.SetActive(true);
+                        inputField.gameObject.SetActive(true);
                 }
 
                 private void OnEnable()
@@ -74,11 +90,11 @@ namespace UI
                 {
                         pointsObject.SaveName(_newRank, PlayerName);
                         pointsObject.ResetPoints();
-                        pathModel.ResetModel();
+                        pathModel.Init();
                         player.ResetPlayer();
-                        //generator.CreatePath();
                         Supyrb.Signals.Get<RestartGameSignal>().Dispatch();
                         gameObject.SetActive(false);
+                        Supyrb.Signals.Get<StartGameSignal>().Dispatch();
                 }
         }
 }

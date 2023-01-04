@@ -1,3 +1,4 @@
+using Model;
 using UnityEngine;
 
 namespace NonTerminals
@@ -14,7 +15,7 @@ namespace NonTerminals
         public override Vector3 Create(Vector3 start, int pathNumber)
         {
             PathModel.SingleBlock.Create(start, pathNumber);
-            _pathGenerator.CreateSecondPath(PathModel.LeftSweep.Create(start + Vector3.forward, pathNumber));
+            PathModel.CreateNewPath(PathModel.LeftSweep.Create(start + Vector3.forward, pathNumber), pathNumber);
             return PathModel.RightSweep.Create(start + Vector3.forward, pathNumber);
         }
     }

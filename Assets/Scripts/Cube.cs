@@ -1,45 +1,64 @@
 using Signals;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Cube : MonoBehaviour
 {
     private PlayerMovement _player;
     private PathGenerator pathGenerator;
 
+    [SerializeField] private Material newMaterial;
+    [SerializeField] private Material oldMaterial;
+
+    [SerializeField] private Renderer renderer;
+
     private bool _dieHard;
-        
+
     private double _seed;
     private const float FallSpeed = 2;
     private Vector3 pos;
     private bool _split;
+    private int _pathNumber;
 
-    public void Init(double seed, bool split = false)
+    public void Init(double seed, int pathNumber, PathGenerator pathGenerator1, bool split = false)
     {
+        _pathNumber = pathNumber;
         _split = split;
         pos = transform.position;
         transform.position += Vector3.up;
         _seed = seed;
+        pathGenerator = pathGenerator1;
     }
-    public void DieHard()
+
+    public void RaycastHit()
+    {
+        renderer.material = newMaterial;
+    }
+
+    private void DieHard()
     {
         if (_split)
         {
-            Supyrb.Signals.Get<DestroyPathSignal>().Dispatch();
+            Supyrb.Signals.Get<DestroyPathWarningSignal>().Dispatch();
         }
+
         _dieHard = true;
         Destroy(gameObject, 1f);
-        pathGenerator.ContinuePath();
+        if (pathGenerator)
+        {
+            pathGenerator.ContinuePath();
+            pathGenerator.cubes.Remove(this);
+        }
     }
 
     private void Awake()
     {
         _player = FindObjectOfType<PlayerMovement>();
-        pathGenerator = FindObjectOfType<PathGenerator>();
     }
 
     private void FixedUpdate()
     {
-        transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime*(Random.value + 1));
+        transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * (Random.value + 1));
     }
 
     private void Update()
@@ -57,5 +76,21 @@ public class Cube : MonoBehaviour
                 DieHard();
             }
         }
+    }
+
+    public int GetPathNumber()
+    {
+        return _pathNumber;
+    }
+
+    public void Kill()
+    {
+        _dieHard = true;
+        Destroy(gameObject, 1f);
+    }
+
+    public void ResetColor()
+    {
+        renderer.material = oldMaterial;    
     }
 }

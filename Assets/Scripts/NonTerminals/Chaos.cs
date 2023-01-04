@@ -1,4 +1,5 @@
 using System;
+using Model;
 using Terminals;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -36,7 +37,7 @@ namespace NonTerminals
                 rnd <= 0.2 ? PathPart.SingleSpike :
                 rnd <= 0.25 ? PathPart.UpStairs :
                 rnd <= 0.3 ? PathPart.JustTriples : 
-                rnd <= 0.35 ? PathPart.PathSplitter : PathPart.TripleBlock; 
+                rnd <= 0.4 ? PathPart.PathSplitter : PathPart.TripleBlock;
             
 
             switch (switchCase)

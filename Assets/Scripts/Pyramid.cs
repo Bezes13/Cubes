@@ -1,3 +1,4 @@
+using Model;
 using UnityEngine;
 
 public class Pyramid : MonoBehaviour
@@ -43,5 +44,10 @@ public class Pyramid : MonoBehaviour
                 DieHard();
             }
         }
+    }
+    public void Kill()
+    {
+        Debug.Log("woo");
+        Destroy(this.gameObject);
     }
 }

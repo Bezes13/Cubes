@@ -1,4 +1,5 @@
 using System;
+using Model;
 using Signals;
 using UnityEngine;
 
@@ -9,9 +10,11 @@ public class PlayerMovement : MonoBehaviour
     private float _speedMultiplier = 2f;
     private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 0.271f, 0.340319f);
     private Vector3 _lastPosition = new Vector3(0,0,-1);
+    private int _pathNumber;
 
     [SerializeField] private Animator animator;
     [SerializeField] private PointsObject pointsObject;
+    [SerializeField] private PathModel model;
 
     private CharacterController _controller;
 
@@ -22,11 +25,44 @@ public class PlayerMovement : MonoBehaviour
     private int _deadMultiplier = 1;
     private bool _stopMultiplier = true;
     public int nextPoint = 5;
+    
+    // color path
+    public bool _showPath;
+    public int _coloredPath = -1;
 
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Right = Animator.StringToHash("Right");
     private static readonly int Left = Animator.StringToHash("Left");
-    
+
+    private void Awake()
+    {
+        Supyrb.Signals.Get<DestroyPathSignal>().AddListener(HandleDestroyPathSignal);
+        Supyrb.Signals.Get<StartGameSignal>().AddListener(StartGame);
+        Supyrb.Signals.Get<DestroyPathWarningSignal>().AddListener(ActivatePath);
+        Supyrb.Signals.Get<DestroyPathSignal>().AddListener(DeactivatePath);
+
+    }
+
+    private void DeactivatePath()
+    {
+        _showPath = false;
+    }
+
+    private void ActivatePath()
+    {
+        _showPath = true;
+    }
+
+    private void StartGame()
+    {
+        _stopMultiplier = !_stopMultiplier;
+    }
+
+    private void HandleDestroyPathSignal()
+    {
+        model.DestroyPath(_pathNumber);
+    }
+
     private void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -35,6 +71,35 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
+        if (_showPath)
+        {
+            foreach (var cube in model.GetGeneratorByNumber(_pathNumber).cubes)
+            {
+                cube.RaycastHit();
+            }
+            
+            if (_coloredPath != _pathNumber && _coloredPath != -1)
+            {
+                foreach (var cube in model.GetGeneratorByNumber(_coloredPath).cubes)
+                {
+                    cube.ResetColor();
+                }
+            }
+
+            _coloredPath = _pathNumber;
+        }
+        else
+        {
+            if (_coloredPath != -1)
+            {
+                foreach (var cube in model.GetGeneratorByNumber(_coloredPath).cubes)
+                {
+                    cube.ResetColor();
+                }
+
+                _coloredPath = -1;   
+            }
+        }
         if (transform.position.z > nextPoint)
         {
             pointsObject.AddPoints(1);
@@ -114,6 +179,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 5f))
+        {
+            var obj = hit.collider.gameObject.GetComponent<Cube>();
+            if (obj != null)
+            {
+                _pathNumber = obj.GetPathNumber();
+            }
+        }
         if (_stopMultiplier)
         {
             return;
@@ -146,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
         nextPoint = 5;
     }
 
-    public void PlayerDead()
+    private void PlayerDead()
     {
         if (_deadMultiplier == 0)
         {

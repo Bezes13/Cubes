@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Model;
 using Signals;
 using TMPro;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace UI
         private void Awake()
         {
             currentPoints.text = "0";
-            Supyrb.Signals.Get<DestroyPathSignal>().AddListener(Warning);
+            Supyrb.Signals.Get<DestroyPathWarningSignal>().AddListener(Warning);
         }
         
         void Update()
@@ -44,13 +45,13 @@ namespace UI
             float normalizedTime = 0;
             while(normalizedTime <= 1f)
             {
-                pathWarning.text = $"The second Path disappears in { 3f - Math.Round(3f * normalizedTime)} seconds"  ;
+                pathWarning.text = $"Second Path disappears in { 3f - Math.Round(3f * normalizedTime)} s"  ;
                 normalizedTime += Time.deltaTime / duration;
                 yield return null;
             }
             pathWarning.gameObject.SetActive(false);
             _isActive = false;
-            pathModel.DestroyPath();
+            Supyrb.Signals.Get<DestroyPathSignal>().Dispatch();
         }
     }
 }

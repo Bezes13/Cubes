@@ -1,4 +1,5 @@
 using DefaultNamespace;
+using Model;
 using UnityEngine;
 
 namespace Terminals
