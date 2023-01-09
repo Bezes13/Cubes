@@ -1,4 +1,5 @@
 using Model;
+using NonTerminals;
 using UnityEngine;
 
 namespace Terminals
@@ -9,9 +10,13 @@ namespace Terminals
         {
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
-            return start + Vector3.forward;
+            return new Grammar()
+            {
+                NextPoint = start + Vector3.forward,
+                Part = PathPart.AfterSpikeOrHole
+            };
         }
         
     }

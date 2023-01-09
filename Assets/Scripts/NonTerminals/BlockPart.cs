@@ -9,13 +9,16 @@ namespace NonTerminals
         {
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
-            Vector3 next = PathModel.RandomTripletAtLeastOne.Create(start, pathNumber);
-            next = PathModel.HoleOrBlock.Create(next, pathNumber);
-            next = PathModel.HoleOrBlock.Create(next, pathNumber);
-            next = PathModel.RandomTripletAtLeastOne.Create(next, pathNumber);
-            return next;
+            Vector3 next = PathModel.RandomTripletAtLeastOne.Create(start, pathNumber).NextPoint;
+            next = PathModel.HoleOrBlock.Create(next, pathNumber).NextPoint;
+            next = PathModel.HoleOrBlock.Create(next, pathNumber).NextPoint;
+            next = PathModel.RandomTripletAtLeastOne.Create(next, pathNumber).NextPoint;
+            return new Grammar()
+            {
+                NextPoint = next
+            };
         }
     }
 }

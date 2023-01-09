@@ -5,18 +5,22 @@ namespace NonTerminals
 {
     public class PathSplitter : NonTerminal
     {
-        private readonly PathGenerator _pathGenerator;
 
-        public PathSplitter(PathModel pathModel, PathGenerator pathGenerator) : base(pathModel)
+        public PathSplitter(PathModel pathModel) : base(pathModel)
         {
-            _pathGenerator = pathGenerator;
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
             PathModel.SingleBlock.Create(start, pathNumber);
-            PathModel.CreateNewPath(PathModel.LeftSweep.Create(start + Vector3.forward, pathNumber), pathNumber);
-            return PathModel.RightSweep.Create(start + Vector3.forward, pathNumber);
+            int newPath = PathModel.CreateNewPath(start + Vector3.forward * 4 + Vector3.left * 4, pathNumber);
+            PathModel.LeftSweep.Create(start + Vector3.forward, newPath);
+            PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.left*2, newPath);
+            PathModel.LeftSweep.Create(start + Vector3.forward*3 + Vector3.left*2, newPath);
+            PathModel.GetGeneratorByNumber(pathNumber).type = PathModel.Prefabtype.Cube;
+            PathModel.RightSweep.Create(start + Vector3.forward, pathNumber);
+            PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.right*2, pathNumber);
+            return new Grammar {Part = PathPart.RightSweep, NextPoint = start + Vector3.forward*3 + Vector3.right*2};
         }
     }
 }

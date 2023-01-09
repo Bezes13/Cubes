@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using NonTerminals;
 using Terminals;
@@ -7,16 +6,17 @@ using Random = System.Random;
 
 namespace Model
 {
+    /// <summary>
+    /// Scriptable Object which contains all informations about the existing paths.
+    /// Contains the functionality to Create and delete paths as well as creating Single Objects.
+    /// </summary>
     [CreateAssetMenu(fileName = "Model", menuName = "ScriptableObjects/SpawnManagerScriptableObject", order = 1)]
     public class PathModel : ScriptableObject
     {
         [SerializeField] private Cube cubePrefab;
+        [SerializeField] private Cube cubePrefab2;
         [SerializeField] private Pyramid pyramidPrefab;
-        [SerializeField] private PathGenerator pathGenerator;
-        [SerializeField] private PointsObject pointsObject;
-    
-        private Random _rnd;
-        private int pathCount = 2;
+
         public List<PathGenerator> paths;
 
         // NonTerminals
@@ -24,14 +24,11 @@ namespace Model
         public HoleOrBlock HoleOrBlock;
         public BlockPart BlockPart;
         public AfterSweep AfterSweep;
-        public JustTriplets JustTriplets;
         public AfterSpikeOrHole AfterSpikeOrHole;
-        public LineOrChaos LineOrChaos;
         public NoHoleOrSpike NoHoleOrSpike;
         public PathSplitter PathSplitter;
     
         // Terminals
-        public List<Terminal> Terminals;
         public Hole Hole;
         public RandomTripletAtLeastOne RandomTripletAtLeastOne;
         public LeftSweep LeftSweep;
@@ -40,53 +37,57 @@ namespace Model
         public SingleSpike SingleSpike;
         public TripleBlock TripleBlock;
         public UpStairs UpStairs;
+        
+        private Random _rnd;
+        private int _pathCount = 2;
 
         public enum Prefabtype
         {
             Cube,
+            Cube2,
             Pyramid
         }
     
         public void Init()
         {
             ResetModel();
-            pathGenerator = FindObjectOfType<PathGenerator>();
             _rnd = new Random();
             paths = new List<PathGenerator> {new GameObject("Path").AddComponent<PathGenerator>()};
             paths[0].pathModel = this;
             paths[0].Init(0, new Vector3(0, 0.5f, 5), -1);
-            Terminals = new List<Terminal>();
+            
+            //Terminals
             RandomTripletAtLeastOne = new RandomTripletAtLeastOne(this, 0);
             Hole = new Hole(this);
-            Chaos = new Chaos(this);
-            AfterSweep = new AfterSweep(this);
-            AfterSpikeOrHole = new AfterSpikeOrHole(this);
-            NoHoleOrSpike = new NoHoleOrSpike(this);
-            LineOrChaos = new LineOrChaos(this);
-        
-            JustTriplets = new JustTriplets(this);
             HoleOrBlock = new HoleOrBlock(this);
-            BlockPart = new BlockPart(this);
             LeftSweep = new LeftSweep(this);
             RightSweep = new RightSweep(this);
             SingleBlock = new SingleBlock(this);
             SingleSpike = new SingleSpike(this);
             TripleBlock = new TripleBlock(this);
             UpStairs = new UpStairs(this);
-            PathSplitter = new PathSplitter(this, pathGenerator);
-        
-            Terminals.Add(new LeftSweep(this));
-            Terminals.Add(new RightSweep(this));
-            Terminals.Add(new UpStairs(this));
-            Terminals.Add(new SingleSpike(this));
-            Terminals.Add(new SingleBlock(this));
-            Terminals.Add(new TripleBlock(this));
-            Terminals.Add(Hole);
-            Terminals.Add(RandomTripletAtLeastOne);
+            
+            //NonTerminals
+            Chaos = new Chaos(this);
+            AfterSweep = new AfterSweep(this);
+            AfterSpikeOrHole = new AfterSpikeOrHole(this);
+            NoHoleOrSpike = new NoHoleOrSpike(this);
+            BlockPart = new BlockPart(this);
+            PathSplitter = new PathSplitter(this);
         }
 
         public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber, bool split = false)
         {
+            foreach (var generator in paths)
+            {
+                foreach (Cube cube in generator.cubes)
+                {
+                    if (Vector3.Distance(position, cube.pos)<0.1)
+                    {
+                        return;
+                    }
+                }
+            }
             var gen = GetGeneratorByNumber(pathNumber);
             if (gen == null)
             {
@@ -99,18 +100,100 @@ namespace Model
                 pyramid.Init(_rnd.NextDouble(), split);
                 return;
             }
-            var obj = Instantiate(cubePrefab, position, Quaternion.identity, parent);
+            var obj = Instantiate(gen.type == Prefabtype.Cube ? cubePrefab:cubePrefab2, position, Quaternion.identity, parent);
             gen.cubes.Add(obj);
             obj.Init(_rnd.NextDouble(), pathNumber, gen, split);
         }
 
-        public void CreateNewPath(Vector3 start, int sidePath)
+        public int CreateNewPath(Vector3 start, int sidePath)
         {
-            var pathNumber = pathCount++;
+            var pathNumber = _pathCount++;
             var path = new GameObject("Path"+ pathNumber).AddComponent<PathGenerator>();
             path.Init(pathNumber, start, sidePath);
+            path.type = Prefabtype.Cube2;
             path.pathModel = this;
-            paths.Add(path); 
+            paths.Add(path);
+            return pathNumber;
+        }
+
+        public void DestroyPath(int pathNumberToKeep, Vector3 playerPos)
+        {
+            var toKeep = PathGeneratorsToKeep(pathNumberToKeep, playerPos.z);
+            var copyPaths = paths.GetRange(0, paths.Count);
+            foreach (var generator in copyPaths)
+            {
+                if (toKeep.Contains(generator))
+                {
+                    continue;
+                }
+                RemovePath(generator);
+            }
+        }
+
+        public List<PathGenerator> PathGeneratorsToKeep(int pathNumber, float playerPos)
+        {
+            List<PathGenerator> toKeep = new List<PathGenerator>();
+            var generatorByNumber = GetGeneratorByNumber(pathNumber);
+            toKeep.Add(generatorByNumber);
+            if (generatorByNumber.sidePath == -1 || GetGeneratorByNumber(generatorByNumber.sidePath) == null)
+            {
+                foreach (var generator in paths)
+                {
+
+                    if (generator.sidePath == pathNumber)
+                    {
+                        if (generator.start.z - 1 < playerPos)
+                        {
+                            continue;
+                        }
+                        toKeep.Add(generator);
+                        AddFurtherPaths(generator.pathNumber, toKeep);
+                    }
+                }
+            }
+            else
+            {
+                AddFurtherPaths(pathNumber, toKeep);
+            }
+
+            return toKeep;
+        }
+
+        private void AddFurtherPaths(int generatorPathNumber, List<PathGenerator> toKeep)
+        {
+            foreach (var generator in paths)
+            {
+                if (generator.sidePath == generatorPathNumber)
+                {
+                    toKeep.Add(generator);
+                    AddFurtherPaths(generator.pathNumber, toKeep);
+                }
+            }
+        }
+
+        public PathGenerator GetGeneratorByNumber(int number)
+        {
+            foreach (PathGenerator generator in paths)
+            {
+                if (generator.pathNumber.Equals(number))
+                {
+                    return generator;
+                }
+            }
+
+            return null;
+        }
+
+        private void RemovePath(PathGenerator gen)
+        {
+            Debug.Log("So we delete " + gen.pathNumber);
+            foreach (Cube child in gen.cubes)
+            {
+                child.Kill();
+            }
+
+            Destroy(gen.gameObject);
+            paths.Remove(gen);
         }
 
         private void ResetModel()
@@ -126,113 +209,7 @@ namespace Model
                     Destroy(path.gameObject);   
                 }
             }
-
             paths.Clear();
-
-
-        }
-
-        public void DestroyPath(int pathNumber)
-        {
-            var copyPaths = paths.GetRange(0, paths.Count);
-            foreach (var generator in copyPaths)
-            {
-                if (generator.pathNumber == pathNumber)
-                {
-                    continue;
-                }
-                if (generator.sidePath == pathNumber)
-                {
-                    continue;
-                }
-                RemovePath(generator);
-            }
-
-            if (GetGeneratorByNumber(pathNumber).sidePath == -1)
-            {
-                return;
-            }
-            foreach (var generator in copyPaths)
-            {
-                if (generator.sidePath == pathNumber)
-                {
-                    RemovePath(generator);
-                    return;
-                }
-            }
-            return;
-            Debug.Log("We are on " + pathNumber);
-            // 0 -> -1
-            // 147 -> 0
-            // 148 -> 0
-            // 149 -> 0
-            // 150 -> 148
-            // 151 -> 148
-            // 152 -> 148
-            // 153 -> 148
-            // 154 -> 148
-            var generatorByNumber = GetGeneratorByNumber(pathNumber);
-            Debug.Log("The side path is " + generatorByNumber.sidePath);
-            copyPaths = paths.GetRange(0, paths.Count);
-            if (generatorByNumber.sidePath == -1)
-            {
-                foreach (PathGenerator generator in copyPaths)
-                {
-                    if (generator.sidePath == pathNumber)
-                    {
-                        var newPath = generator.pathNumber;
-                        RemovePath(GetGeneratorByNumber(generator.pathNumber));
-                        DeleteAllAssociatedPaths(newPath);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("we just need to delete " + generatorByNumber.sidePath);
-                RemovePath(GetGeneratorByNumber(generatorByNumber.sidePath));
-                DeleteAllAssociatedPaths(generatorByNumber.sidePath);
-                generatorByNumber.sidePath = -1;
-            }
-        }
-
-        private void DeleteAllAssociatedPaths(int newPath)
-        {
-            var copyPaths = paths.GetRange(0, paths.Count);
-            foreach (PathGenerator generator in copyPaths)
-            {
-                if (generator.sidePath == newPath)
-                {
-                    newPath = generator.pathNumber;
-                    RemovePath(GetGeneratorByNumber(generator.pathNumber));
-                    DeleteAllAssociatedPaths(newPath);
-                }
-            }
-        }
-
-        private void RemovePath(PathGenerator gen)
-        {
-            Debug.Log("So we delete " + gen.pathNumber);
-            foreach (Cube child in gen.cubes)
-            {
-                child.Kill();
-            }
-
-            Destroy(gen.gameObject);
-            paths.Remove(gen);
-        }
-
-        public PathGenerator GetGeneratorByNumber(int number)
-        {
-            foreach (PathGenerator generator in paths)
-            {
-                if (generator.pathNumber.Equals(number))
-                {
-                    return generator;
-                }
-            }
-
-            return null;
         }
     }
 }

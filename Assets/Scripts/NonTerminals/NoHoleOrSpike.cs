@@ -9,34 +9,26 @@ namespace NonTerminals
         {
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
             var rnd = Random.value;
             var switchCase = rnd <= 0.05 ? PathPart.LeftSweep :
                 rnd <= 0.1 ? PathPart.RightSweep :
-                rnd <= 0.15 ? PathPart.UpStairs :
-                rnd <= 0.2 ? PathPart.JustTriples : PathPart.TripleBlock; 
+                rnd <= 0.15 ? PathPart.UpStairs : PathPart.TripleBlock; 
 
             switch (switchCase)
             {
                 case PathPart.LeftSweep: 
-                    start = PathModel.LeftSweep.Create(start, pathNumber);
-                    return PathModel.AfterSweep.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.LeftSweep, NextPoint = start};
                 case PathPart.RightSweep: 
-                    start = PathModel.RightSweep.Create(start, pathNumber);
-                    return PathModel.AfterSweep.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.RightSweep, NextPoint = start};
                 case PathPart.TripleBlock: 
-                    start = PathModel.TripleBlock.Create(start, pathNumber);
-                    return start;
+                    return new Grammar {Part = PathPart.TripleBlock, NextPoint = start};
                 case PathPart.UpStairs: 
-                    start = PathModel.UpStairs.Create(start, pathNumber);
-                    return start;
-                case PathPart.JustTriples:
-                    start = PathModel.JustTriplets.Create(start, pathNumber);
-                    return PathModel.LineOrChaos.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.UpStairs, NextPoint = start};
             }
 
-            return start;
+            return new Grammar(){NextPoint = start};
         }
     }
 }

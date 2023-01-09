@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDestroyPathSignal()
     {
-        model.DestroyPath(_pathNumber);
+        model.DestroyPath(_pathNumber, transform.position);
     }
 
     private void Start()
@@ -71,34 +71,27 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
-        if (_showPath)
+        if (false && _showPath)
         {
-            foreach (var cube in model.GetGeneratorByNumber(_pathNumber).cubes)
+            var toKeep = model.PathGeneratorsToKeep(_pathNumber, transform.position.z);
+            foreach (PathGenerator generator in model.paths)
             {
-                cube.RaycastHit();
-            }
-            
-            if (_coloredPath != _pathNumber && _coloredPath != -1)
-            {
-                foreach (var cube in model.GetGeneratorByNumber(_coloredPath).cubes)
+                if (toKeep.Contains(generator))
                 {
-                    cube.ResetColor();
+                    foreach (var cube in generator.cubes)
+                    {
+                        cube.ResetColor();
+                    }
+                }
+                else
+                {
+                    foreach (var cube in generator.cubes)
+                    {
+                        cube.RaycastHit();
+                    }   
                 }
             }
 
-            _coloredPath = _pathNumber;
-        }
-        else
-        {
-            if (_coloredPath != -1)
-            {
-                foreach (var cube in model.GetGeneratorByNumber(_coloredPath).cubes)
-                {
-                    cube.ResetColor();
-                }
-
-                _coloredPath = -1;   
-            }
         }
         if (transform.position.z > nextPoint)
         {

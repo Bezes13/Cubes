@@ -1,5 +1,6 @@
 using DefaultNamespace;
 using Model;
+using NonTerminals;
 using UnityEngine;
 
 namespace Terminals
@@ -12,11 +13,15 @@ namespace Terminals
         {
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
             PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber);
             PathModel.CreateObject(PathModel.Prefabtype.Pyramid, start + new Vector3(0, 0.5f,0), pathNumber);
-            return start + Vector3.forward;
+            return new Grammar()
+            {
+                NextPoint = start + Vector3.forward, 
+                Part = PathPart.AfterSpikeOrHole
+            };
         }
     }
 }

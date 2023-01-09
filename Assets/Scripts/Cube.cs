@@ -16,7 +16,7 @@ public class Cube : MonoBehaviour
 
     private double _seed;
     private const float FallSpeed = 2;
-    private Vector3 pos;
+    public Vector3 pos;
     private bool _split;
     private int _pathNumber;
 
@@ -46,7 +46,6 @@ public class Cube : MonoBehaviour
         Destroy(gameObject, 1f);
         if (pathGenerator)
         {
-            pathGenerator.ContinuePath();
             pathGenerator.cubes.Remove(this);
         }
     }

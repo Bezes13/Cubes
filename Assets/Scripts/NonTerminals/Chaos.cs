@@ -1,6 +1,5 @@
 using System;
 using Model;
-using Terminals;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,9 +14,12 @@ namespace NonTerminals
         SingleBlock, 
         TripleBlock,
         UpStairs,
-        JustTriples,
         Chaos,
-        PathSplitter
+        PathSplitter,
+        AfterSweep,
+        NoHoleNoSpike,
+        AfterSpikeOrHole,
+        RandomTripleAtLeastOne
     }
     
     public class Chaos : NonTerminal
@@ -28,7 +30,7 @@ namespace NonTerminals
         public Chaos(PathModel pathModel) : base(pathModel)
         {
         }
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
             var rnd = Random.value;
             var switchCase = rnd <= 0.05 ? PathPart.LeftSweep :
@@ -36,39 +38,29 @@ namespace NonTerminals
                 rnd <= 0.15 ? PathPart.Hole :
                 rnd <= 0.2 ? PathPart.SingleSpike :
                 rnd <= 0.25 ? PathPart.UpStairs :
-                rnd <= 0.3 ? PathPart.JustTriples : 
-                rnd <= 0.4 ? PathPart.PathSplitter : PathPart.TripleBlock;
+                rnd <= 0.3 ? PathPart.PathSplitter : PathPart.TripleBlock;
             
 
             switch (switchCase)
             {
                 case PathPart.LeftSweep: 
-                    start = PathModel.LeftSweep.Create(start, pathNumber);
-                    return PathModel.AfterSweep.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.LeftSweep, NextPoint = start };
+                
                 case PathPart.RightSweep: 
-                    start = PathModel.RightSweep.Create(start, pathNumber);
-                    return PathModel.AfterSweep.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.RightSweep, NextPoint = start };
                 case PathPart.Hole: 
-                    start = PathModel.Hole.Create(start, pathNumber);
-                    return PathModel.AfterSpikeOrHole.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.Hole, NextPoint = start };
                 case PathPart.SingleSpike: 
-                    start = PathModel.SingleSpike.Create(start, pathNumber);
-                    return PathModel.AfterSpikeOrHole.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.SingleSpike, NextPoint = start };
                 case PathPart.TripleBlock: 
-                    start = PathModel.TripleBlock.Create(start, pathNumber);
-                    return start;
+                    return new Grammar {Part = PathPart.TripleBlock, NextPoint = start };
                 case PathPart.UpStairs: 
-                    start = PathModel.UpStairs.Create(start, pathNumber);
-                    return start;
-                case PathPart.JustTriples:
-                    start = PathModel.JustTriplets.Create(start, pathNumber);
-                    return PathModel.LineOrChaos.Create(start, pathNumber);
+                    return new Grammar {Part = PathPart.UpStairs, NextPoint = start };
                 case PathPart.PathSplitter:
-                    start = PathModel.PathSplitter.Create(start, pathNumber);
-                    return start;
+                    return new Grammar {Part = PathPart.PathSplitter, NextPoint = start };
             }
 
-            return start;
+            return new Grammar();
         }
     }
 }

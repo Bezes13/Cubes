@@ -9,9 +9,11 @@ namespace NonTerminals
         {
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
-            return Random.value > 0.9 ? PathModel.Hole.Create(start, pathNumber) : PathModel.RandomTripletAtLeastOne.Create(start, pathNumber);
+            return Random.value > 0.9
+                ? new Grammar {Part = PathPart.Hole, NextPoint = start}
+                : new Grammar {Part = PathPart.RandomTripleAtLeastOne, NextPoint = start};
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Terminals
             _difficulty = difficulty;
         }
 
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
             var onePlaced = RandomTile(start, pathNumber);
             onePlaced = RandomTile(start + Vector3.right, pathNumber) || onePlaced;
@@ -23,12 +23,11 @@ namespace Terminals
                 Vector3 pos = rnd > 0.66 ? Vector3.zero : rnd < 0.33 ? Vector3.right : Vector3.left;
                 PathModel.CreateObject(PathModel.Prefabtype.Cube, start + pos, pathNumber);
             }
-            return start + Vector3.forward;
+            return new Grammar() {NextPoint = start + Vector3.forward};
         }
         
         private bool RandomTile(Vector3 pos, int pathNumber)
         {
-            
             if (Random.value <= 0.3 + _difficulty)
             {
                 return false;

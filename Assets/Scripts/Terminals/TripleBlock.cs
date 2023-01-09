@@ -13,12 +13,12 @@ namespace Terminals
             _rnd = new Random();
         }
         
-        public override Vector3 Create(Vector3 start, int pathNumber)
+        public override Grammar Create(Vector3 start, int pathNumber)
         {
             PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber);
             PathModel.CreateObject(PathModel.Prefabtype.Cube, start + new Vector3(1, 0, 0), pathNumber);
             PathModel.CreateObject(PathModel.Prefabtype.Cube, start + new Vector3(-1, 0, 0), pathNumber);
-            return start + Vector3.forward;
+            return new Grammar() {NextPoint = start + Vector3.forward};
         }
 
         private void RandomTile(Vector3 pos, int pathNumber)

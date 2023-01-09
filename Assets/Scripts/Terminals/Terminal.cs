@@ -13,6 +13,6 @@ namespace Terminals
             PathModel = pathModel;
         }
 
-        public abstract Vector3 Create(Vector3 start, int pathNumber);
+        public abstract Grammar Create(Vector3 start, int pathNumber);
     }
 }
