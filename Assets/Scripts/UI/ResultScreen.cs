@@ -77,7 +77,7 @@ namespace UI
                         {
                                 return;
                         }
-                        names[_newRank].text = $"{_newRank+1}. {PlayerName}";
+                        names[_newRank].text = PlayerName;
                         pointsObject.SaveName(_newRank, PlayerName);
                 }
 
