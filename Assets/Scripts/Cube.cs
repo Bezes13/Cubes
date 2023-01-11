@@ -7,11 +7,6 @@ public class Cube : MonoBehaviour
     private PlayerMovement _player;
     private PathGenerator pathGenerator;
 
-    [SerializeField] private Material newMaterial;
-    [SerializeField] private Material oldMaterial;
-
-    [SerializeField] private Renderer renderer;
-
     private bool _dieHard;
 
     private double _seed;
@@ -28,11 +23,6 @@ public class Cube : MonoBehaviour
         transform.position += Vector3.up;
         _seed = seed;
         pathGenerator = pathGenerator1;
-    }
-
-    public void RaycastHit()
-    {
-        renderer.material = newMaterial;
     }
 
     private void DieHard()
@@ -65,7 +55,7 @@ public class Cube : MonoBehaviour
         if (_dieHard)
         {
             var pos1 = transform.position;
-            var position = new Vector3(pos1.x, pos1.y - Time.deltaTime * FallSpeed, pos1.z);
+            var position = new Vector3(pos1.x, pos1.y - Time.deltaTime * FallSpeed * (float) _seed, pos1.z);
             transform.position = position;
         }
         else
@@ -85,11 +75,6 @@ public class Cube : MonoBehaviour
     public void Kill()
     {
         _dieHard = true;
-        Destroy(gameObject, 1f);
-    }
-
-    public void ResetColor()
-    {
-        renderer.material = oldMaterial;    
+        Destroy(gameObject, 1f + (float) _seed);
     }
 }

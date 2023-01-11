@@ -15,7 +15,7 @@ namespace Model
     {
         [SerializeField] private Cube cubePrefab;
         [SerializeField] private Cube cubePrefab2;
-        [SerializeField] private Pyramid pyramidPrefab;
+        [SerializeField] private Cube pyramidPrefab;
 
         public List<PathGenerator> paths;
 
@@ -41,10 +41,7 @@ namespace Model
         private Random _rnd;
         private int _pathCount = 2;
 
-// TODO unify CUbe and pyramid
-// TODO get new pyramid asset
-// TODO show path vanish correct
-// TODO make path drop more beatiful
+// todo make vanish warning correct
 // TODO improve rules
         public enum Prefabtype
         {
@@ -102,7 +99,7 @@ namespace Model
             if (prefabType.Equals(Prefabtype.Pyramid))
             {
                 var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(0,0,0), parent);
-                pyramid.Init(_rnd.NextDouble(), split);
+                pyramid.Init(_rnd.NextDouble(), pathNumber, gen, split);
                 return;
             }
             var obj = Instantiate(gen.type == Prefabtype.Cube ? cubePrefab:cubePrefab2, position, Quaternion.identity, parent);

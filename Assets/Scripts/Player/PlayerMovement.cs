@@ -25,10 +25,6 @@ public class PlayerMovement : MonoBehaviour
     private int _deadMultiplier = 1;
     private bool _stopMultiplier = true;
     public int nextPoint = 5;
-    
-    // color path
-    public bool _showPath;
-    public int _coloredPath = -1;
 
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Right = Animator.StringToHash("Right");
@@ -38,19 +34,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Supyrb.Signals.Get<DestroyPathSignal>().AddListener(HandleDestroyPathSignal);
         Supyrb.Signals.Get<StartGameSignal>().AddListener(StartGame);
-        Supyrb.Signals.Get<DestroyPathWarningSignal>().AddListener(ActivatePath);
-        Supyrb.Signals.Get<DestroyPathSignal>().AddListener(DeactivatePath);
-
-    }
-
-    private void DeactivatePath()
-    {
-        _showPath = false;
-    }
-
-    private void ActivatePath()
-    {
-        _showPath = true;
     }
 
     private void StartGame()
@@ -71,28 +54,6 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
-        if (false && _showPath)
-        {
-            var toKeep = model.PathGeneratorsToKeep(_pathNumber, transform.position.z);
-            foreach (PathGenerator generator in model.paths)
-            {
-                if (toKeep.Contains(generator))
-                {
-                    foreach (var cube in generator.cubes)
-                    {
-                        cube.ResetColor();
-                    }
-                }
-                else
-                {
-                    foreach (var cube in generator.cubes)
-                    {
-                        cube.RaycastHit();
-                    }   
-                }
-            }
-
-        }
         if (transform.position.z > nextPoint)
         {
             pointsObject.AddPoints(1);
