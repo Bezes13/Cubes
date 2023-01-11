@@ -99,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
             nextPoint++;
             //_speedMultiplier += 0.005f;
         }
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             _stopMultiplier = !_stopMultiplier;
         }
@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
     
     private void Animations()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
             if (_controller.isGrounded)
             {
@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
             if (!_controller.isGrounded)
             {
@@ -157,13 +157,13 @@ public class PlayerMovement : MonoBehaviour
             _currentJump -= JumpForce * 2 * Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             animator.SetTrigger(Left);
             _sidestep = _sidestep != transform.position.x ? _sidestep - 1 : transform.position.x - 1f;
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             animator.SetTrigger(Right);
             _sidestep = _sidestep != transform.position.x ? _sidestep + 1 : transform.position.x + 1f;

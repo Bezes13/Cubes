@@ -14,6 +14,7 @@ public class PathGenerator : MonoBehaviour
     public List<Cube> cubes;
     public int sidePath;
     public PathModel.Prefabtype type;
+    private bool stopCreating;
 
     private void Awake()
     {
@@ -49,8 +50,11 @@ public class PathGenerator : MonoBehaviour
 
     public void ContinuePath()
     {
+        if(stopCreating){
+            return;
+        }
         Vector3 screenPoint = Camera.main.WorldToViewportPoint(_nextPoint.NextPoint);
-        bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 0.8;
+        bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 0.9;
         if (onScreen)
         {
             _nextPoint = pathModel.Chaos.Create(_nextPoint.NextPoint, pathNumber);
@@ -92,6 +96,11 @@ public class PathGenerator : MonoBehaviour
             }
             _nextPoint = pathModel.Chaos.Create(_nextPoint.NextPoint, pathNumber);
         }
+    }
+
+    public void StopCreating()
+    {
+        stopCreating = true;
     }
 
     private void CreatePath()

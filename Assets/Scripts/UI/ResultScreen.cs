@@ -42,12 +42,20 @@ namespace UI
 
                 private void ShowScreen()
                 {
+                        pointsObject.AddScore();
                         gameObject.SetActive(true);
                         startButton.text = "Restart";
                         result.gameObject.SetActive(true);
                         Image.SetActive(true);
                         inputField.gameObject.SetActive(true);
-                        pointsObject.AddScore();
+                }
+
+                private void Update()
+                {
+                        if (Input.GetKeyDown(KeyCode.P))
+                        {
+                                Restart();
+                        }
                 }
 
                 private void OnEnable()

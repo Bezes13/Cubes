@@ -41,6 +41,11 @@ namespace Model
         private Random _rnd;
         private int _pathCount = 2;
 
+// TODO unify CUbe and pyramid
+// TODO get new pyramid asset
+// TODO show path vanish correct
+// TODO make path drop more beatiful
+// TODO improve rules
         public enum Prefabtype
         {
             Cube,
@@ -192,7 +197,8 @@ namespace Model
                 child.Kill();
             }
 
-            Destroy(gen.gameObject);
+            Destroy(gen.gameObject, 2f);
+            gen.StopCreating();
             paths.Remove(gen);
         }
 

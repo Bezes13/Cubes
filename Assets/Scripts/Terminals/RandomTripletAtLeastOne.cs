@@ -16,9 +16,7 @@ namespace Terminals
             var onePlaced = RandomTile(start, pathNumber);
             onePlaced = RandomTile(start + Vector3.right, pathNumber) || onePlaced;
             onePlaced = RandomTile(start + Vector3.left, pathNumber) || onePlaced;
-            onePlaced = RandomTile(start + Vector3.up, pathNumber) || onePlaced;
-            onePlaced = RandomTile(start + Vector3.right + Vector3.up, pathNumber) || onePlaced;
-            onePlaced = RandomTile(start + Vector3.left + Vector3.up, pathNumber) || onePlaced;
+          
 
             if (!onePlaced)
             {
@@ -29,7 +27,7 @@ namespace Terminals
             return new Grammar() {NextPoint = start + Vector3.forward};
         }
         
-        private bool RandomTile(Vector3 pos, int pathNumber)
+        private bool RandomTile(Vector3 pos, int pathNumber, bool invert = false)
         {
             if (Random.value <= 0.3 + _difficulty)
             {
