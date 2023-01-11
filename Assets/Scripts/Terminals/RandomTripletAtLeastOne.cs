@@ -16,6 +16,9 @@ namespace Terminals
             var onePlaced = RandomTile(start, pathNumber);
             onePlaced = RandomTile(start + Vector3.right, pathNumber) || onePlaced;
             onePlaced = RandomTile(start + Vector3.left, pathNumber) || onePlaced;
+            onePlaced = RandomTile(start + Vector3.up, pathNumber) || onePlaced;
+            onePlaced = RandomTile(start + Vector3.right + Vector3.up, pathNumber) || onePlaced;
+            onePlaced = RandomTile(start + Vector3.left + Vector3.up, pathNumber) || onePlaced;
 
             if (!onePlaced)
             {
