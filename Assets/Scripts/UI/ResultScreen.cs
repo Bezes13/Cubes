@@ -38,7 +38,6 @@ namespace UI
                         result.gameObject.SetActive(false);
                         Image.SetActive(false);
                         inputField.gameObject.SetActive(false);
-                        //pathModel.Init();
                 }
 
                 private void ShowScreen()
@@ -48,17 +47,17 @@ namespace UI
                         result.gameObject.SetActive(true);
                         Image.SetActive(true);
                         inputField.gameObject.SetActive(true);
+                        pointsObject.AddScore();
                 }
 
                 private void OnEnable()
                 {
-                        pointsObject.AddScore();
                         _newRank = -1;
                         int reachedPoints = pointsObject.GetPoints();
                         var highScoreEntries = pointsObject.GetHighScores();
                         for (int i = 0; highScoreEntries.Length > i ; i++)
                         {
-                                names[i].text = $"{i+1}. {highScoreEntries[i].Name}";
+                                names[i].text = $"{i+1}. {highScoreEntries[i].Name ?? "Player1"}";
                                 scores[i].text = highScoreEntries[i].Points.ToString();
                                 if (highScoreEntries[i].New)
                                 {
