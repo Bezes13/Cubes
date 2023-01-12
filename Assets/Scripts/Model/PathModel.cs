@@ -16,6 +16,7 @@ namespace Model
         [SerializeField] private Cube cubePrefab;
         [SerializeField] private Cube cubePrefab2;
         [SerializeField] private Cube pyramidPrefab;
+        [SerializeField] private Cube cubeOnTop;
 
         public List<PathGenerator> paths;
 
@@ -47,6 +48,7 @@ namespace Model
         {
             Cube,
             Cube2,
+            CubeOnTop,
             Pyramid
         }
     
@@ -95,14 +97,10 @@ namespace Model
             {
                 return;
             }
+            Cube prefab = prefabType.Equals(Prefabtype.Pyramid) ? pyramidPrefab : prefabType.Equals(Prefabtype.CubeOnTop) ? cubeOnTop : gen.type == Prefabtype.Cube ? cubePrefab : cubePrefab2;
             var parent = gen.transform;
-            if (prefabType.Equals(Prefabtype.Pyramid))
-            {
-                var pyramid = Instantiate(pyramidPrefab, position, Quaternion.Euler(0,0,0), parent);
-                pyramid.Init(_rnd.NextDouble(), pathNumber, gen, split);
-                return;
-            }
-            var obj = Instantiate(gen.type == Prefabtype.Cube ? cubePrefab:cubePrefab2, position, Quaternion.identity, parent);
+            
+            var obj = Instantiate(prefab, position, Quaternion.identity, parent);
             gen.cubes.Add(obj);
             obj.Init(_rnd.NextDouble(), pathNumber, gen, split);
         }

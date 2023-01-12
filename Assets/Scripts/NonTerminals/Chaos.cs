@@ -38,7 +38,7 @@ namespace NonTerminals
                 rnd <= 0.15 ? PathPart.Hole :
                 rnd <= 0.2 ? PathPart.SingleSpike :
                 rnd <= 0.25 ? PathPart.UpStairs :
-                rnd <= 0.3 ? PathPart.PathSplitter : PathPart.TripleBlock;
+                rnd <= 0.27 ? PathPart.PathSplitter : PathPart.TripleBlock;
             
 
             switch (switchCase)

@@ -65,7 +65,7 @@ namespace UI
                         var highScoreEntries = pointsObject.GetHighScores();
                         for (int i = 0; highScoreEntries.Length > i ; i++)
                         {
-                                names[i].text = $"{i+1}. {highScoreEntries[i].Name ?? "Player1"}";
+                                names[i].text = $"{highScoreEntries[i].Name ?? "Player1"}";
                                 scores[i].text = highScoreEntries[i].Points.ToString();
                                 if (highScoreEntries[i].New)
                                 {

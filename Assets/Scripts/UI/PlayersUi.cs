@@ -13,6 +13,8 @@ namespace UI
         [SerializeField] private TextMeshProUGUI pathWarning;
         [SerializeField] private PointsObject pointsObject;
         [SerializeField] private PathModel pathModel;
+        [SerializeField] private GameObject WarningImage;
+
 
         private bool _isActive;
 
@@ -24,7 +26,7 @@ namespace UI
         
         void Update()
         {
-            currentPoints.text = "Points: " + pointsObject.GetPoints();
+            currentPoints.text = pointsObject.GetPoints().ToString();
         }
 
         private void Warning()
@@ -37,6 +39,7 @@ namespace UI
             _isActive = true;
             StartCoroutine(Countdown());
             pathWarning.gameObject.SetActive(true);
+            WarningImage.gameObject.SetActive(true);
         }
     
         private IEnumerator Countdown()
@@ -50,6 +53,7 @@ namespace UI
                 yield return null;
             }
             pathWarning.gameObject.SetActive(false);
+            WarningImage.gameObject.SetActive(false);
             _isActive = false;
             Supyrb.Signals.Get<DestroyPathSignal>().Dispatch();
         }

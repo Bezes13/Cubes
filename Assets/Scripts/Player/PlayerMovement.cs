@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private const float JumpForce = 7f;
     private const float SideStepMultiplier = 0.25f;
     private float _speedMultiplier = 2f;
-    private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 0.271f, 0.340319f);
+    private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 1.271f, 0.340319f);
     private Vector3 _lastPosition = new Vector3(0,0,-1);
     private int _pathNumber;
 
@@ -54,11 +54,12 @@ public class PlayerMovement : MonoBehaviour
     
     void Update()
     {
-        if (transform.position.z > nextPoint)
+        if (transform.position.z > nextPoint && _speedMultiplier <= 3f)
         {
-            pointsObject.AddPoints(1);
-            nextPoint++;
-            //_speedMultiplier += 0.005f;
+            // TODO remove
+            nextPoint += 5;
+            _speedMultiplier += 0.005f;
+            Debug.Log(_speedMultiplier);
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -155,6 +156,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         _lastPosition = transform.position;
+        if(_stopMultiplier || _deadMultiplier == 0){
+            return;
+        }
+        pointsObject.AddPoints(1);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -172,6 +177,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _deadMultiplier = 1;
         _stopMultiplier = true;
+        _speedMultiplier = 2f;
         nextPoint = 5;
     }
 
