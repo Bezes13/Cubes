@@ -19,7 +19,8 @@ namespace NonTerminals
         AfterSweep,
         NoHoleNoSpike,
         AfterSpikeOrHole,
-        RandomTripleAtLeastOne
+        RandomTripleAtLeastOne,
+        PreferBlockOnTop
     }
     
     public class Chaos : NonTerminal

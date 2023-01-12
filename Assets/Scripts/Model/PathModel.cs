@@ -49,7 +49,8 @@ namespace Model
             Cube,
             Cube2,
             CubeOnTop,
-            Pyramid
+            Pyramid,
+            Star
         }
     
         public void Init()
