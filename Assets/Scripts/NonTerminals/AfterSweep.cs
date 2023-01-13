@@ -19,21 +19,11 @@ namespace NonTerminals
             var rnd = Random.value;
             var switchCase = rnd <= 0.05 ? PathPart.Hole :
                 rnd <= 0.1 ? PathPart.SingleSpike :
-                rnd <= 0.15 ? PathPart.UpStairs : PathPart.TripleBlock; 
+                rnd <= 0.15 ? PathPart.UpStairs :
+                rnd <= 0.5 ? PathPart.BlockOnTop :
+                rnd <= 0.99 ? PathPart.TripleBlock : PathPart.Star;
 
-            switch (switchCase)
-            {
-                case PathPart.Hole: 
-                    return new Grammar {Part = PathPart.Hole, NextPoint = start };
-                case PathPart.SingleSpike: 
-                    return new Grammar {Part = PathPart.SingleSpike, NextPoint = start };
-                case PathPart.TripleBlock: 
-                    return new Grammar {Part = PathPart.TripleBlock, NextPoint = start };
-                case PathPart.UpStairs: 
-                    return new Grammar {Part = PathPart.UpStairs, NextPoint = start };
-            }
-
-            return new Grammar();
+            return new Grammar {Part = switchCase, NextPoint = start };
         }
     }
 }

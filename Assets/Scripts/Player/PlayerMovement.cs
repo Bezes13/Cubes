@@ -1,5 +1,6 @@
 using System;
 using Model;
+using Objects;
 using Signals;
 using UnityEngine;
 
@@ -165,12 +166,18 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Pyramid obj = other.GetComponent<Pyramid>();
-        if (obj == null)
+        if (obj != null)
         {
-            return;
+            PlayerDead();
         }
 
-        PlayerDead();
+        CollectableStar star = other.GetComponent<CollectableStar>();
+        if (star != null)
+        {
+            pointsObject.AddPoints(1000);
+            Destroy(other.gameObject);
+        }
+        
     }
 
     public void ResetPlayer()

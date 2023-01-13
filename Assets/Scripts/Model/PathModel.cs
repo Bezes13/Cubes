@@ -38,6 +38,8 @@ namespace Model
         public SingleSpike SingleSpike;
         public TripleBlock TripleBlock;
         public UpStairs UpStairs;
+        public Star Star;
+        public BlockOnTop BlockOnTop;
         
         private Random _rnd;
         private int _pathCount = 2;
@@ -52,7 +54,7 @@ namespace Model
             Pyramid,
             Star
         }
-    
+
         public void Init()
         {
             ResetModel();
@@ -71,6 +73,8 @@ namespace Model
             SingleSpike = new SingleSpike(this);
             TripleBlock = new TripleBlock(this);
             UpStairs = new UpStairs(this);
+            BlockOnTop = new BlockOnTop(this);
+            Star = new Star(this);
             
             //NonTerminals
             Chaos = new Chaos(this);

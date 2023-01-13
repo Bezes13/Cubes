@@ -17,6 +17,7 @@ namespace NonTerminals
             next = PathModel.RandomTripletAtLeastOne.Create(next, pathNumber).NextPoint;
             return new Grammar()
             {
+                Part = PathPart.Chaos,
                 NextPoint = next
             };
         }

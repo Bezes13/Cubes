@@ -14,21 +14,11 @@ namespace NonTerminals
             var rnd = Random.value;
             var switchCase = rnd <= 0.05 ? PathPart.LeftSweep :
                 rnd <= 0.1 ? PathPart.RightSweep :
-                rnd <= 0.15 ? PathPart.UpStairs : PathPart.TripleBlock; 
+                rnd <= 0.15 ? PathPart.UpStairs : 
+                rnd <= 0.5 ? PathPart.BlockOnTop :
+                rnd <= 0.99 ? PathPart.TripleBlock : PathPart.Star;
 
-            switch (switchCase)
-            {
-                case PathPart.LeftSweep: 
-                    return new Grammar {Part = PathPart.LeftSweep, NextPoint = start};
-                case PathPart.RightSweep: 
-                    return new Grammar {Part = PathPart.RightSweep, NextPoint = start};
-                case PathPart.TripleBlock: 
-                    return new Grammar {Part = PathPart.TripleBlock, NextPoint = start};
-                case PathPart.UpStairs: 
-                    return new Grammar {Part = PathPart.UpStairs, NextPoint = start};
-            }
-
-            return new Grammar(){NextPoint = start};
+            return new Grammar {Part = switchCase, NextPoint = start };
         }
     }
 }

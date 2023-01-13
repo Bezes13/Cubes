@@ -93,10 +93,10 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3262219946644501248}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.49, y: 1, z: 1}
+  m_Size: {x: 0.65, y: 0.9, z: 0.4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7075613174587433543
 MonoBehaviour:
@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.7650042
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 468682, guid: 81bb6dd39399160478e712beac61b13f, type: 3}
       propertyPath: m_LocalScale.z

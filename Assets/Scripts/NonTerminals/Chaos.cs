@@ -20,7 +20,9 @@ namespace NonTerminals
         NoHoleNoSpike,
         AfterSpikeOrHole,
         RandomTripleAtLeastOne,
-        PreferBlockOnTop
+        PreferBlockOnTop,
+        BlockOnTop,
+        Star
     }
     
     public class Chaos : NonTerminal
@@ -39,29 +41,11 @@ namespace NonTerminals
                 rnd <= 0.15 ? PathPart.Hole :
                 rnd <= 0.2 ? PathPart.SingleSpike :
                 rnd <= 0.25 ? PathPart.UpStairs :
-                rnd <= 0.27 ? PathPart.PathSplitter : PathPart.TripleBlock;
-            
+                rnd <= 0.27 ? PathPart.PathSplitter : 
+                rnd <= 0.5 ? PathPart.BlockOnTop :
+                rnd <= 0.99 ? PathPart.TripleBlock : PathPart.Star;
 
-            switch (switchCase)
-            {
-                case PathPart.LeftSweep: 
-                    return new Grammar {Part = PathPart.LeftSweep, NextPoint = start };
-                
-                case PathPart.RightSweep: 
-                    return new Grammar {Part = PathPart.RightSweep, NextPoint = start };
-                case PathPart.Hole: 
-                    return new Grammar {Part = PathPart.Hole, NextPoint = start };
-                case PathPart.SingleSpike: 
-                    return new Grammar {Part = PathPart.SingleSpike, NextPoint = start };
-                case PathPart.TripleBlock: 
-                    return new Grammar {Part = PathPart.TripleBlock, NextPoint = start };
-                case PathPart.UpStairs: 
-                    return new Grammar {Part = PathPart.UpStairs, NextPoint = start };
-                case PathPart.PathSplitter:
-                    return new Grammar {Part = PathPart.PathSplitter, NextPoint = start };
-            }
-
-            return new Grammar();
+            return new Grammar {Part = switchCase, NextPoint = start };
         }
     }
 }

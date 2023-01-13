@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Model;
 using NonTerminals;
@@ -15,6 +16,7 @@ public class PathGenerator : MonoBehaviour
     public int sidePath;
     public PathModel.Prefabtype type;
     private bool stopCreating;
+    private Camera _camera;
 
     private void Awake()
     {
@@ -29,6 +31,7 @@ public class PathGenerator : MonoBehaviour
 
     private void Start()
     {
+        _camera = Camera.main;
         CreatePath();
     }
 
@@ -48,12 +51,12 @@ public class PathGenerator : MonoBehaviour
         // pathModel.RandomTripletAtLeastOne.Increase(difficulty);
     }
 
-    public void ContinuePath()
+    private void ContinuePath()
     {
         if(stopCreating){
             return;
         }
-        Vector3 screenPoint = Camera.main.WorldToViewportPoint(_nextPoint.NextPoint);
+        Vector3 screenPoint = _camera.WorldToViewportPoint(_nextPoint.NextPoint);
         bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 0.9;
         if (onScreen)
         {
@@ -92,6 +95,12 @@ public class PathGenerator : MonoBehaviour
                     return;
                 case PathPart.RandomTripleAtLeastOne:
                     _nextPoint = pathModel.RandomTripletAtLeastOne.Create(_nextPoint.NextPoint, pathNumber);
+                    return;
+                case PathPart.BlockOnTop:
+                    _nextPoint = pathModel.BlockOnTop.Create(_nextPoint.NextPoint, pathNumber);
+                    return;
+                case PathPart.Star:
+                    _nextPoint = pathModel.Star.Create(_nextPoint.NextPoint, pathNumber);
                     return;
             }
             _nextPoint = pathModel.Chaos.Create(_nextPoint.NextPoint, pathNumber);
