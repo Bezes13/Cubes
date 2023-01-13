@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePrefab: {fileID: 1474561191324606480, guid: 1d26e445de1bf443fbee5fd8a030bdca, type: 3}
   cubePrefab2: {fileID: 5089431689299891775, guid: a07f3a2a2a5504b42bb1a9750ce6a109, type: 3}
-  pyramidPrefab: {fileID: 1957653897601354615, guid: 62406f7523c569c41ade39955fbcc193, type: 3}
+  pyramidPrefab: {fileID: 4702193665902710793, guid: 9c7934a224a184aa4a41076cd67e4c6d, type: 3}
   cubeOnTop: {fileID: 1893768267222062916, guid: 0deb335b35ced424ab3a154c400f4da5, type: 3}
+  starPrefab: {fileID: 1957653897601354615, guid: 62406f7523c569c41ade39955fbcc193, type: 3}
   paths:
   - {fileID: 0}

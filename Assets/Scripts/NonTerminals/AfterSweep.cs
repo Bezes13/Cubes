@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Model;
 using Terminals;
 using UnityEngine;
@@ -16,12 +17,13 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            var rnd = Random.value;
-            var switchCase = rnd <= 0.05 ? PathPart.Hole :
-                rnd <= 0.1 ? PathPart.SingleSpike :
-                rnd <= 0.15 ? PathPart.UpStairs :
-                rnd <= 0.5 ? PathPart.BlockOnTop :
-                rnd <= 0.99 ? PathPart.TripleBlock : PathPart.Star;
+            List<PieceProbability> probabilities = new List<PieceProbability>();
+            probabilities.Add(new PieceProbability(3, PathPart.Hole));
+            probabilities.Add(new PieceProbability(3, PathPart.SingleSpike));
+            probabilities.Add(new PieceProbability(3, PathPart.UpStairs));
+            probabilities.Add(new PieceProbability(10, PathPart.BlockOnTop));
+            probabilities.Add(new PieceProbability(1, PathPart.Star));
+            var switchCase = GetNewPiece(probabilities);
 
             return new Grammar {Part = switchCase, NextPoint = start };
         }
