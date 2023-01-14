@@ -17,10 +17,10 @@ namespace Terminals
             PathModel.RandomTripletAtLeastOne.Create(start + Vector3.forward * 2, pathNumber);
             PathModel.RandomTripletAtLeastOne.Create(start + Vector3.forward * 3, pathNumber);
             float rnd = Random.value;
-            PathModel.CreateObject(PathModel.Prefabtype.CubeOnTop, start + Vector3.up + (rnd < 0.33 ? Vector3.zero : rnd < 0.66 ? Vector3.right : Vector3.left), pathNumber);
+            PathModel.CreateObject(PathModel.Prefabtype.CubeOnTop, start + Vector3.forward + Vector3.up + (rnd < 0.33 ? Vector3.zero : rnd < 0.66 ? Vector3.right : Vector3.left), pathNumber);
             return new Grammar()
             {
-                NextPoint = start + Vector3.forward * 4, 
+                NextPoint = start + Vector3.forward * 5, 
                 Part = PathPart.PreferBlockOnTop
             };
         }

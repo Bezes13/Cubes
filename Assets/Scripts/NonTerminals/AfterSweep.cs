@@ -23,6 +23,7 @@ namespace NonTerminals
             probabilities.Add(new PieceProbability(3, PathPart.UpStairs));
             probabilities.Add(new PieceProbability(10, PathPart.BlockOnTop));
             probabilities.Add(new PieceProbability(1, PathPart.Star));
+            probabilities.Add(new PieceProbability(20, PathPart.RandomTripleAtLeastOne));
             var switchCase = GetNewPiece(probabilities);
 
             return new Grammar {Part = switchCase, NextPoint = start };

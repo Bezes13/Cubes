@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private PointsObject pointsObject;
     [SerializeField] private PathModel model;
+    [SerializeField] private ParticleSystem starExplosion;
 
     private CharacterController _controller;
 
@@ -175,6 +176,8 @@ public class PlayerMovement : MonoBehaviour
         if (star != null)
         {
             pointsObject.AddPoints(1000);
+            starExplosion.gameObject.SetActive(true);
+            starExplosion.Play();
             Destroy(other.gameObject);
         }
         

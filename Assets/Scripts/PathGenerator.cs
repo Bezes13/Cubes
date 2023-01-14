@@ -76,10 +76,13 @@ public class PathGenerator : MonoBehaviour
                     _nextPoint = pathModel.SingleSpike.Create(_nextPoint.NextPoint, pathNumber);
                     return;
                 case PathPart.TripleBlock: 
-                    _nextPoint = pathModel.RandomTripletAtLeastOne.Create(_nextPoint.NextPoint, pathNumber);
+                    _nextPoint = pathModel.TripleBlock.Create(_nextPoint.NextPoint, pathNumber);
                     return;
                 case PathPart.UpStairs: 
                     _nextPoint = pathModel.UpStairs.Create(_nextPoint.NextPoint, pathNumber);
+                    return;
+                case PathPart.AfterStairs: 
+                    _nextPoint = pathModel.AfterStairs.Create(_nextPoint.NextPoint, pathNumber);
                     return;
                 case PathPart.NoHoleNoSpike:
                     _nextPoint = pathModel.NoHoleOrSpike.Create(_nextPoint.NextPoint, pathNumber);

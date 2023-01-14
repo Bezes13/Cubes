@@ -29,6 +29,7 @@ namespace Model
         public AfterSpikeOrHole AfterSpikeOrHole;
         public NoHoleOrSpike NoHoleOrSpike;
         public PathSplitter PathSplitter;
+        public AfterStairs AfterStairs; 
     
         // Terminals
         public Hole Hole;
@@ -84,6 +85,7 @@ namespace Model
             NoHoleOrSpike = new NoHoleOrSpike(this);
             BlockPart = new BlockPart(this);
             PathSplitter = new PathSplitter(this);
+            AfterStairs = new AfterStairs(this);
         }
 
         public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber, bool split = false)

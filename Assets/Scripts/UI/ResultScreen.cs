@@ -8,7 +8,6 @@ namespace UI
 {
         public class ResultScreen : MonoBehaviour
         {
-                private const string NewHighscore = "New Highscore!";
                 public string PlayerName { get; set; }
                 [SerializeField] 
                 private PathModel pathModel;
@@ -65,16 +64,15 @@ namespace UI
                         var highScoreEntries = pointsObject.GetHighScores();
                         for (int i = 0; highScoreEntries.Length > i ; i++)
                         {
-                                names[i].text = $"{highScoreEntries[i].Name ?? "Player1"}";
+                                names[i].text = $"{(highScoreEntries[i].Name == "" ? "Player" : highScoreEntries[i].Name)}";
                                 scores[i].text = highScoreEntries[i].Points.ToString();
                                 if (highScoreEntries[i].New)
                                 {
                                         _newRank = i;
                                 }
                         }
-
-                        var text = _newRank == 0 ? NewHighscore : PlayerPrefs.GetString(PointsObject.HighScore1) + " is better.";
-                        result.text = $"You got {reachedPoints} Points. {text}";
+                        
+                        result.text = $"You got {reachedPoints} Points.";
                         UpdateNameOnHighScoreBoard();
                 }
 

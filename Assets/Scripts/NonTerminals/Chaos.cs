@@ -23,7 +23,8 @@ namespace NonTerminals
         RandomTripleAtLeastOne,
         PreferBlockOnTop,
         BlockOnTop,
-        Star
+        Star,
+        AfterStairs
     }
     
     public class Chaos : NonTerminal
@@ -44,7 +45,8 @@ namespace NonTerminals
             probabilities.Add(new PieceProbability(10, PathPart.BlockOnTop));
             probabilities.Add(new PieceProbability(2, PathPart.PathSplitter));
             probabilities.Add(new PieceProbability(5, PathPart.Hole));
-            probabilities.Add(new PieceProbability(1, PathPart.Star));
+            probabilities.Add(new PieceProbability(10, PathPart.Star));
+            probabilities.Add(new PieceProbability(20, PathPart.RandomTripleAtLeastOne));
             var switchCase = GetNewPiece(probabilities);
 
             return new Grammar {Part = switchCase, NextPoint = start };

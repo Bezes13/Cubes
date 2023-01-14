@@ -1,3 +1,4 @@
+using System;
 using Signals;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -34,6 +35,14 @@ public class Cube : MonoBehaviour
 
         _dieHard = true;
         Destroy(gameObject, 1f);
+        if (pathGenerator)
+        {
+            pathGenerator.cubes.Remove(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
         if (pathGenerator)
         {
             pathGenerator.cubes.Remove(this);

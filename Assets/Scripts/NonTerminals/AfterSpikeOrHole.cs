@@ -23,7 +23,8 @@ namespace NonTerminals
             probabilities.Add(new PieceProbability(5, PathPart.SingleSpike));
             probabilities.Add(new PieceProbability(3, PathPart.UpStairs));
             probabilities.Add(new PieceProbability(10, PathPart.BlockOnTop));
-            probabilities.Add(new PieceProbability(1, PathPart.Star));
+            probabilities.Add(new PieceProbability(10, PathPart.Star));
+            probabilities.Add(new PieceProbability(20, PathPart.RandomTripleAtLeastOne));
             var switchCase = GetNewPiece(probabilities);
 
 
