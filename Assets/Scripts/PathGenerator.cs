@@ -9,7 +9,7 @@ public class PathGenerator : MonoBehaviour
 {
     public PathModel pathModel;
     public Vector3 start;
-    public Queue<Grammar> NextPoint;
+    public Grammar NextPoint;
     public int pathNumber;
     public List<Cube> cubes;
     public int sidePath;
@@ -21,7 +21,6 @@ public class PathGenerator : MonoBehaviour
     {
         cubes = new List<Cube>();
         Supyrb.Signals.Get<RestartGameSignal>().AddListener(CreatePath);
-        NextPoint = new Queue<Grammar>();
     }
 
     private void Start()
@@ -47,13 +46,13 @@ public class PathGenerator : MonoBehaviour
             return;
         }
 
-        var screenPoint = _camera.WorldToViewportPoint(NextPoint.Peek().NextPoint);
+        var screenPoint = _camera.WorldToViewportPoint(NextPoint.NextPoint);
         var onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 0.9;
         if (!onScreen)
         {
             return;
         }
-        NextPoint.Enqueue(SwitchCase(NextPoint.Dequeue()));
+        NextPoint = SwitchCase(NextPoint);
     }
 
     public void CreateInBetween(Grammar grammar)
@@ -61,7 +60,7 @@ public class PathGenerator : MonoBehaviour
         SwitchCase(grammar);
     }
 
-    public Grammar SwitchCase(Grammar grammar)
+    private Grammar SwitchCase(Grammar grammar)
     {
         switch (grammar.Part)
         {
@@ -161,7 +160,7 @@ public class PathGenerator : MonoBehaviour
     private void CreatePath()
     {
         pathModel.TripleBlock.Create(start, pathNumber);
-        NextPoint.Enqueue(pathModel.BlockPart.Create(start + new Vector3(0, 0, 1), pathNumber));
+        NextPoint = pathModel.BlockPart.Create(start + new Vector3(0, 0, 1), pathNumber);
     }
 
     public void Init(int pathNumber, Vector3 start, int sidePath)
