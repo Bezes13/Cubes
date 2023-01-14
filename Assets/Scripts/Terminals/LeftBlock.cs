@@ -1,4 +1,5 @@
 using Model;
+using NonTerminals;
 using UnityEngine;
 
 namespace Terminals
@@ -12,7 +13,7 @@ namespace Terminals
         public override Grammar Create(Vector3 start, int pathNumber)
         {
             PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.left, pathNumber);
-            return new Grammar() {NextPoint = start + Vector3.forward};
+            return new Grammar() {NextPoint = start + Vector3.forward, Part = PathPart.Chaos};
         }
     }
 }

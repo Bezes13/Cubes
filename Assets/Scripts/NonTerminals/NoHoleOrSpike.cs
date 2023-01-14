@@ -14,8 +14,8 @@ namespace NonTerminals
         {
             var rnd = Random.value;
             List<PieceProbability> probabilities = new List<PieceProbability>();
-            probabilities.Add(new PieceProbability(5, 5, PathPart.LeftSweep));
-            probabilities.Add(new PieceProbability(5, 5, PathPart.RightSweep));
+            probabilities.Add(new PieceProbability(1, 1, PathPart.LeftSweep));
+            probabilities.Add(new PieceProbability(1, 1, PathPart.RightSweep));
             probabilities.Add(new PieceProbability(2, 2, PathPart.UpStairs));
             probabilities.Add(new PieceProbability(8,3, PathPart.RandomLog));
             probabilities.Add(new PieceProbability(1, 1, PathPart.Star));

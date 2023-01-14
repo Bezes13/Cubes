@@ -12,6 +12,7 @@ namespace Terminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
+            // TODO warum keine logss an der seite
             var gen = PathModel.GetGeneratorByNumber(pathNumber);
             gen.CreateInBetween(PathModel.AtLeastRightBlock.Create(start, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastRightBlock.Create(start + Vector3.forward, pathNumber));
