@@ -12,7 +12,6 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            var rnd = Random.value;
             List<PieceProbability> probabilities = new List<PieceProbability>();
             probabilities.Add(new PieceProbability(1, 1, PathPart.LeftSweep));
             probabilities.Add(new PieceProbability(1, 1, PathPart.RightSweep));

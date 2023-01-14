@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Model;
 using UnityEngine;
@@ -7,9 +6,6 @@ namespace NonTerminals
 {
     public class Chaos : NonTerminal
     {
-        private Type lastType;
-        private int countLastType;
-        
         public Chaos(PathModel pathModel) : base(pathModel)
         {
         }

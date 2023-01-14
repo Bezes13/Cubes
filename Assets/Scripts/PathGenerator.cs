@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Model;
 using NonTerminals;
+using Objects;
 using Signals;
 using UnityEngine;
 
@@ -9,12 +9,12 @@ public class PathGenerator : MonoBehaviour
 {
     public PathModel pathModel;
     public Vector3 start;
-    public Grammar NextPoint;
+    private Grammar _nextPoint;
     public int pathNumber;
     public List<Cube> cubes;
     public int sidePath;
     public PathModel.Prefabtype type;
-    private bool stopCreating;
+    private bool _stopCreating;
     private Camera _camera;
 
     private void Awake()
@@ -41,18 +41,18 @@ public class PathGenerator : MonoBehaviour
 
     private void ContinuePath()
     {
-        if (stopCreating)
+        if (_stopCreating)
         {
             return;
         }
 
-        var screenPoint = _camera.WorldToViewportPoint(NextPoint.NextPoint);
+        var screenPoint = _camera.WorldToViewportPoint(_nextPoint.NextPoint);
         var onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 0.9;
         if (!onScreen)
         {
             return;
         }
-        NextPoint = SwitchCase(NextPoint);
+        _nextPoint = SwitchCase(_nextPoint);
     }
 
     public void CreateInBetween(Grammar grammar)
@@ -153,19 +153,19 @@ public class PathGenerator : MonoBehaviour
 
     public void StopCreating()
     {
-        stopCreating = true;
+        _stopCreating = true;
     }
 
     private void CreatePath()
     {
         pathModel.TripleBlock.Create(start, pathNumber);
-        NextPoint = pathModel.BlockPart.Create(start + new Vector3(0, 0, 1), pathNumber);
+        _nextPoint = pathModel.BlockPart.Create(start + new Vector3(0, 0, 1), pathNumber);
     }
 
-    public void Init(int pathNumber, Vector3 start, int sidePath)
+    public void Init(int initPathNumber, Vector3 startVec, int side)
     {
-        this.pathNumber = pathNumber;
-        this.start = start;
-        this.sidePath = sidePath;
+        pathNumber = initPathNumber;
+        start = startVec;
+        sidePath = side;
     }
 }

@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using Model;
-using NonTerminals;
 using UnityEngine;
-namespace Terminals
+
+namespace NonTerminals
 {
     public class RandomTripletAtLeastOne : NonTerminal
     {
-        private float _difficulty;
-
-        public RandomTripletAtLeastOne(PathModel pathModel, float difficulty) : base(pathModel)
+        public RandomTripletAtLeastOne(PathModel pathModel) : base(pathModel)
         {
-            _difficulty = difficulty;
         }
 
         public override Grammar Create(Vector3 start, int pathNumber)
@@ -27,11 +24,6 @@ namespace Terminals
             var switchCase = GetNewPiece(probabilities);
 
             return new Grammar {Part = switchCase, NextPoint = start };
-        }
-
-        public void Increase(float difficulty)
-        {
-            _difficulty = difficulty;
         }
     }
 }

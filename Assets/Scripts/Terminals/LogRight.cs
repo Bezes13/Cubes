@@ -18,8 +18,8 @@ namespace Terminals
             gen.CreateInBetween(PathModel.AtLeastRightBlock.Create(start + Vector3.forward * 2, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastRightBlock.Create(start + Vector3.forward * 3, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastRightBlock.Create(start + Vector3.forward * 4, pathNumber));
+            gen.CreateInBetween(PathModel.AtLeastRightBlock.Create(start + Vector3.forward * 5, pathNumber));
             PathModel.CreateObject(PathModel.Prefabtype.Log, start + new Vector3(1,1,1), pathNumber);
-            Debug.Log("right" + (start + new Vector3(1,1,1)));
             return new Grammar()
             {
                 NextPoint = start + Vector3.forward * 5, 

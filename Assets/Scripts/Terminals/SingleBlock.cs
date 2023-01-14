@@ -1,4 +1,3 @@
-using DefaultNamespace;
 using Model;
 using NonTerminals;
 using UnityEngine;

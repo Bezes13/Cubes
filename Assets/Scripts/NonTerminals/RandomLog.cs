@@ -19,7 +19,6 @@ namespace NonTerminals
                 new PieceProbability(34, 20, PathPart.Log),
             };
             var switchCase = GetNewPiece(probabilities);
-            Debug.Log(switchCase);
             return new Grammar {Part = switchCase, NextPoint = start };
         }
     }

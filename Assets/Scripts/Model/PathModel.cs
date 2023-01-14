@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NonTerminals;
+using Objects;
 using Terminals;
 using UnityEngine;
 using Random = System.Random;
@@ -77,7 +78,7 @@ namespace Model
             paths[0].Init(0, new Vector3(0, 0.5f, 5), -1);
             
             //Terminals
-            RandomTripletAtLeastOne = new RandomTripletAtLeastOne(this, 0);
+            RandomTripletAtLeastOne = new RandomTripletAtLeastOne(this);
             Hole = new Hole(this);
             HoleOrBlock = new HoleOrBlock(this);
             LeftSweep = new LeftSweep(this);
@@ -230,7 +231,6 @@ namespace Model
 
         private void RemovePath(PathGenerator gen)
         {
-            Debug.Log("So we delete " + gen.pathNumber);
             foreach (Cube child in gen.cubes)
             {
                 child.Kill();

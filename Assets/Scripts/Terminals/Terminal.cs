@@ -1,4 +1,3 @@
-using DefaultNamespace;
 using Model;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ namespace Terminals
     {
         protected PathModel PathModel;
 
-        public Terminal(PathModel pathModel)
+        protected Terminal(PathModel pathModel)
         {
             PathModel = pathModel;
         }

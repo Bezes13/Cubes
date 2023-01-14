@@ -1,5 +1,8 @@
 using UnityEngine;
 
-public class Pyramid : MonoBehaviour
+namespace Objects
 {
+    public class Pyramid : MonoBehaviour
+    {
+    }
 }
