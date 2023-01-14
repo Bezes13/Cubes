@@ -11,7 +11,8 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            return Random.value > 0.9
+            var difficulty = 0.95f + -0.95f * Difficult;
+            return Random.value > difficulty
                 ? new Grammar {Part = PathPart.Hole, NextPoint = start}
                 : new Grammar {Part = PathPart.RandomTripleAtLeastOne, NextPoint = start};
         }

@@ -12,7 +12,7 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            PathModel.SingleBlock.Create(start, pathNumber);
+            PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber, true);
             int newPath = PathModel.CreateNewPath(start + Vector3.forward * 4 + Vector3.left * 4, pathNumber);
             PathModel.LeftSweep.Create(start + Vector3.forward, newPath);
             PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.left*2, newPath);

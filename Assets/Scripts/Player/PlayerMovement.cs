@@ -58,10 +58,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (transform.position.z > nextPoint && _speedMultiplier <= 3f)
         {
-            // TODO remove
             nextPoint += 5;
-            _speedMultiplier += 0.005f;
-            Debug.Log(_speedMultiplier);
+            _speedMultiplier += 0.01f;
+            model.IncreaseDifficulty(0.01f);
         }
         if (Input.GetKeyDown(KeyCode.P))
         {

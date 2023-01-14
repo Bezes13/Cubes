@@ -29,8 +29,12 @@ namespace Model
         public AfterSpikeOrHole AfterSpikeOrHole;
         public NoHoleOrSpike NoHoleOrSpike;
         public PathSplitter PathSplitter;
-        public AfterStairs AfterStairs; 
-    
+        public AfterStairs AfterStairs;
+        public AtLeastLeftBlock AtLeastLeftBlock;
+        public AtLeastMiddleBlock AtLeastMiddleBlock;
+        public AtLeastRightBlock AtLeastRightBlock;
+        public RandomLog RandomLog;
+        
         // Terminals
         public Hole Hole;
         public RandomTripletAtLeastOne RandomTripletAtLeastOne;
@@ -41,7 +45,14 @@ namespace Model
         public TripleBlock TripleBlock;
         public UpStairs UpStairs;
         public Star Star;
-        public BlockOnTop BlockOnTop;
+        public Log Log;
+        public LogLeft LogLeft;
+        public LogRight LogRight;
+        public LeftBlock LeftBlock;
+        public RightBlock RightBlock;
+        public LeftMiddleBlock LeftMiddleBlock;
+        public LeftRightBlock LeftRightBlock;
+        public RightMiddleBlock RightMiddleBlock;
         
         private Random _rnd;
         private int _pathCount = 2;
@@ -52,7 +63,7 @@ namespace Model
         {
             Cube,
             Cube2,
-            CubeOnTop,
+            Log,
             Pyramid,
             Star
         }
@@ -75,9 +86,16 @@ namespace Model
             SingleSpike = new SingleSpike(this);
             TripleBlock = new TripleBlock(this);
             UpStairs = new UpStairs(this);
-            BlockOnTop = new BlockOnTop(this);
+            Log = new Log(this);
+            LogLeft = new LogLeft(this);
+            LogRight = new LogRight(this);
             Star = new Star(this);
-            
+            LeftBlock = new LeftBlock(this);
+            RightBlock = new RightBlock(this);
+            LeftRightBlock = new LeftRightBlock(this);
+            LeftMiddleBlock = new LeftMiddleBlock(this);
+            RightMiddleBlock = new RightMiddleBlock(this);
+           
             //NonTerminals
             Chaos = new Chaos(this);
             AfterSweep = new AfterSweep(this);
@@ -86,6 +104,10 @@ namespace Model
             BlockPart = new BlockPart(this);
             PathSplitter = new PathSplitter(this);
             AfterStairs = new AfterStairs(this);
+            AtLeastMiddleBlock = new AtLeastMiddleBlock(this);
+            AtLeastRightBlock = new AtLeastRightBlock(this);
+            AtLeastLeftBlock = new AtLeastLeftBlock(this);
+            RandomLog = new RandomLog(this);
         }
 
         public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber, bool split = false)
@@ -105,7 +127,7 @@ namespace Model
             {
                 return;
             }
-            Cube prefab = prefabType.Equals(Prefabtype.Pyramid) ? pyramidPrefab : prefabType.Equals(Prefabtype.Star) ? starPrefab : prefabType.Equals(Prefabtype.CubeOnTop) ? cubeOnTop : gen.type == Prefabtype.Cube ? cubePrefab : cubePrefab2;
+            Cube prefab = prefabType.Equals(Prefabtype.Pyramid) ? pyramidPrefab : prefabType.Equals(Prefabtype.Star) ? starPrefab : prefabType.Equals(Prefabtype.Log) ? cubeOnTop : gen.type == Prefabtype.Cube ? cubePrefab : cubePrefab2;
             var parent = gen.transform;
             
             var obj = Instantiate(prefab, position, Quaternion.identity, parent);
@@ -138,7 +160,21 @@ namespace Model
             }
         }
 
-        public List<PathGenerator> PathGeneratorsToKeep(int pathNumber, float playerPos)
+        public void IncreaseDifficulty(float value)
+        {
+            Chaos.IncreaseDifficult(value);
+            AfterSweep.IncreaseDifficult(value);
+            AfterSpikeOrHole.IncreaseDifficult(value);
+            NoHoleOrSpike.IncreaseDifficult(value);
+            BlockPart.IncreaseDifficult(value);
+            PathSplitter.IncreaseDifficult(value);
+            AfterStairs.IncreaseDifficult(value);
+            AtLeastMiddleBlock.IncreaseDifficult(value);
+            AtLeastRightBlock.IncreaseDifficult(value);
+            AtLeastLeftBlock.IncreaseDifficult(value);
+        }
+
+        private List<PathGenerator> PathGeneratorsToKeep(int pathNumber, float playerPos)
         {
             List<PathGenerator> toKeep = new List<PathGenerator>();
             var generatorByNumber = GetGeneratorByNumber(pathNumber);

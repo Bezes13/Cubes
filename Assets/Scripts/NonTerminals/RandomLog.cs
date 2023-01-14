@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Model;
 using UnityEngine;
 
 namespace NonTerminals
 {
-    public class AfterStairs : NonTerminal
+    public class RandomLog : NonTerminal
     {
-        public AfterStairs(PathModel pathModel) : base(pathModel)
+        public RandomLog(PathModel pathModel) : base(pathModel)
         {
         }
 
@@ -14,9 +14,9 @@ namespace NonTerminals
         {
             List<PieceProbability> probabilities = new List<PieceProbability>
             {
-                new PieceProbability(5, 10, PathPart.SingleSpike),
-                new PieceProbability(5, 10, PathPart.Hole),
-                new PieceProbability(20, 80, PathPart.RandomTripleAtLeastOne)
+                new PieceProbability(33, 40, PathPart.RightLog),
+                new PieceProbability(33, 40, PathPart.LeftLog),
+                new PieceProbability(34, 20, PathPart.Log),
             };
             var switchCase = GetNewPiece(probabilities);
 
