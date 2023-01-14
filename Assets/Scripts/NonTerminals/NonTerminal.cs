@@ -30,7 +30,7 @@ namespace NonTerminals
             var check = 0f;
             foreach (var piece in probabilities)
             {
-                check += (piece.Probablility + (Difficult * (piece.Max - piece.Probablility))) / 100.0f;
+                check += (piece.Probablility + Difficult * (piece.Max - piece.Probablility)) / 100.0f;
                 if (rnd < check)
                 {
                     switchCase = piece.Piece;

@@ -64,11 +64,11 @@ public class PathGenerator : MonoBehaviour
     {
         switch (grammar.Part)
         {
-            case PathPart.LeftSweep:
-                return pathModel.LeftSweep.Create(grammar.NextPoint, pathNumber);
-                
             case PathPart.RightSweep:
                 return pathModel.RightSweep.Create(grammar.NextPoint, pathNumber);
+                
+            case PathPart.LeftSweep:
+                return pathModel.LeftSweep.Create(grammar.NextPoint, pathNumber);
                 
             case PathPart.Hole:
                 return pathModel.Hole.Create(grammar.NextPoint, pathNumber);
@@ -98,8 +98,7 @@ public class PathGenerator : MonoBehaviour
                 return pathModel.PathSplitter.Create(grammar.NextPoint, pathNumber);
                 
             case PathPart.RandomTripleAtLeastOne:
-                return 
-                    pathModel.RandomTripletAtLeastOne.Create(grammar.NextPoint, pathNumber);
+                return pathModel.RandomTripletAtLeastOne.Create(grammar.NextPoint, pathNumber);
                 
             case PathPart.LeftLog:
                 return pathModel.LogLeft.Create(grammar.NextPoint, pathNumber);
