@@ -25,6 +25,7 @@ namespace NonTerminals
             probabilities.Add(new PieceProbability(5, 15, PathPart.Hole));
             probabilities.Add(new PieceProbability(1,1, PathPart.Star));
             probabilities.Add(new PieceProbability(20,50, PathPart.RandomTripleAtLeastOne));
+            probabilities.Add(new PieceProbability(8,3, PathPart.RandomLog));
             var switchCase = GetNewPiece(probabilities);
 
             return new Grammar {Part = switchCase, NextPoint = start };
