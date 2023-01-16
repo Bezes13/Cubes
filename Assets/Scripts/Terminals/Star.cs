@@ -1,5 +1,6 @@
 ﻿using Model;
 using NonTerminals;
+using Path;
 using UnityEngine;
 
 namespace Terminals

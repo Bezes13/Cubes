@@ -1,10 +1,12 @@
-namespace NonTerminals
+using NonTerminals;
+
+namespace Path
 {
     public struct PieceProbability
     {
-        public float Probablility;
-        public float Max;
-        public PathPart Piece;
+        public readonly float Probablility;
+        public readonly float Max;
+        public readonly PathPart Piece;
 
         public PieceProbability(float probablility, float max, PathPart piece)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Model;
+using Path;
 using UnityEngine;
 
 namespace NonTerminals
