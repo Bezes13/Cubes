@@ -16,7 +16,6 @@ namespace NonTerminals
             probabilities.Add(new PieceProbability(5,5, PathPart.RightSweep));
             probabilities.Add(new PieceProbability(5,15, PathPart.SingleSpike));
             probabilities.Add(new PieceProbability(3,3, PathPart.UpStairs));
-            probabilities.Add(new PieceProbability(20, 5, PathPart.Log));
             probabilities.Add(new PieceProbability(2, 1, PathPart.PathSplitter));
             probabilities.Add(new PieceProbability(5, 15, PathPart.Hole));
             probabilities.Add(new PieceProbability(1,1, PathPart.Star));
