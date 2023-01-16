@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
-    public class AtLeastLeftBlock : NonTerminal
+    public class LastMidOne : NonTerminal
     {
-        public AtLeastLeftBlock(PathModel pathModel) : base(pathModel)
+        public LastMidOne(PathModel pathModel) : base(pathModel)
         {
         }
 
@@ -15,10 +15,8 @@ namespace NonTerminals
         {
             var probabilities = new List<PieceProbability>
             {
-                new PieceProbability(0, 80, PathPart.LeftBlock),
-                new PieceProbability(30, 10, PathPart.LeftMiddleBlock),
-                new PieceProbability(40, 0, PathPart.TripleBlock),
-                new PieceProbability(30, 10, PathPart.LeftRightBlock)
+                new PieceProbability(70, 70, PathPart.AtLeastMiddleBlock),
+                new PieceProbability(30, 30, PathPart.Chaos)
             };
             var switchCase = GetNewPiece(probabilities);
 

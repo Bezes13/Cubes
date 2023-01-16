@@ -13,10 +13,11 @@ namespace Terminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber);
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.left, pathNumber);
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start + Vector3.left * 2, pathNumber);
-            return new Grammar() {NextPoint = start + Vector3.left * 2 + Vector3.forward, Part = PathPart.AfterSweep};
+            PathModel.CreateObject(PathModel.PrefabType.Cube, start, pathNumber);
+            PathModel.CreateObject(PathModel.PrefabType.Cube, start + Vector3.left, pathNumber);
+            PathModel.CreateObject(PathModel.PrefabType.Cube, start + Vector3.left * 2, pathNumber);
+            PathModel.CreateObject(PathModel.PrefabType.Cube, start + Vector3.left * 3, pathNumber);
+            return new Grammar() {NextPoint = start + Vector3.left * 3 + Vector3.forward, Part = PathPart.AfterSweep};
         }
     }
 }

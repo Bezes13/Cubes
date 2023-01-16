@@ -13,15 +13,25 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            PathModel.CreateObject(PathModel.Prefabtype.Cube, start, pathNumber, true);
-            int newPath = PathModel.CreateNewPath(start + Vector3.forward * 4 + Vector3.left * 4, pathNumber);
+            // New path
+            var newPath = PathModel.CreateNewPath(start + Vector3.forward * 4 + Vector3.left * 6, pathNumber);
+            PathModel.GetGeneratorByNumber(pathNumber).type = PathModel.PrefabType.Cube;
+            
+            // first block
+            PathModel.CreateObject(PathModel.PrefabType.Cube, start, pathNumber, true);
+
+
+            // first sweep
             PathModel.LeftSweep.Create(start + Vector3.forward, newPath);
-            PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.left*2, newPath);
-            PathModel.LeftSweep.Create(start + Vector3.forward*3 + Vector3.left*2, newPath);
-            PathModel.GetGeneratorByNumber(pathNumber).type = PathModel.Prefabtype.Cube;
             PathModel.RightSweep.Create(start + Vector3.forward, pathNumber);
-            PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.right*2, pathNumber);
-            return new Grammar {Part = PathPart.RightSweep, NextPoint = start + Vector3.forward*3 + Vector3.right*2};
+
+            // SingleBlock
+            PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.left*3, newPath);
+            PathModel.SingleBlock.Create(start + Vector3.forward*2 + Vector3.right*3, pathNumber);
+            
+            // Last Sweep
+            PathModel.LeftSweep.Create(start + Vector3.forward*3 + Vector3.left*3, newPath);
+            return new Grammar {Part = PathPart.RightSweep, NextPoint = start + Vector3.forward*3 + Vector3.right*3};
         }
     }
 }

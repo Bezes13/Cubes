@@ -28,6 +28,9 @@ namespace NonTerminals
         RightMiddleBlock,
         AtLeastMiddleBlock,
         AtLeastRightBlock,
-        AtLeastLeftBlock
+        AtLeastLeftBlock,
+        LastRightOne,
+        LastLeftOne,
+        LastMiddleOne
     }
 }

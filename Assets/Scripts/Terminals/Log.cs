@@ -20,7 +20,7 @@ namespace Terminals
             gen.CreateInBetween(PathModel.AtLeastMiddleBlock.Create(start + Vector3.forward * 3, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastMiddleBlock.Create(start + Vector3.forward * 4, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastMiddleBlock.Create(start + Vector3.forward * 5, pathNumber));
-            PathModel.CreateObject(PathModel.Prefabtype.Log, start + Vector3.forward + Vector3.up, pathNumber);
+            PathModel.CreateObject(PathModel.PrefabType.Log, start + Vector3.forward + Vector3.up, pathNumber);
             return new Grammar()
             {
                 NextPoint = start + Vector3.forward * 5, 

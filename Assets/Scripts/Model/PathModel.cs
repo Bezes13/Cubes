@@ -36,6 +36,9 @@ namespace Model
         public AtLeastMiddleBlock AtLeastMiddleBlock;
         public AtLeastRightBlock AtLeastRightBlock;
         public RandomLog RandomLog;
+        public LastLeftOne LastLeftOne;
+        public LastMidOne LastMidOne;
+        public LastRightOne LastRightOne;
         
         // Terminals
         public Hole Hole;
@@ -59,9 +62,7 @@ namespace Model
         private Random _rnd;
         private int _pathCount = 2;
 
-// todo make vanish warning correct
-// TODO improve rules
-        public enum Prefabtype
+        public enum PrefabType
         {
             Cube,
             Cube2,
@@ -110,9 +111,12 @@ namespace Model
             AtLeastRightBlock = new AtLeastRightBlock(this);
             AtLeastLeftBlock = new AtLeastLeftBlock(this);
             RandomLog = new RandomLog(this);
+            LastLeftOne = new LastLeftOne(this);
+            LastMidOne = new LastMidOne(this);
+            LastRightOne = new LastRightOne(this);
         }
 
-        public void CreateObject(Prefabtype prefabType, Vector3 position, int pathNumber, bool split = false)
+        public void CreateObject(PrefabType prefabType, Vector3 position, int pathNumber, bool split = false)
         {
             foreach (var generator in paths)
             {
@@ -129,7 +133,7 @@ namespace Model
             {
                 return;
             }
-            Cube prefab = prefabType.Equals(Prefabtype.Pyramid) ? pyramidPrefab : prefabType.Equals(Prefabtype.Star) ? starPrefab : prefabType.Equals(Prefabtype.Log) ? cubeOnTop : gen.type == Prefabtype.Cube ? cubePrefab : cubePrefab2;
+            Cube prefab = prefabType.Equals(PrefabType.Pyramid) ? pyramidPrefab : prefabType.Equals(PrefabType.Star) ? starPrefab : prefabType.Equals(PrefabType.Log) ? cubeOnTop : gen.type == PrefabType.Cube ? cubePrefab : cubePrefab2;
             var parent = gen.transform;
             
             var obj = Instantiate(prefab, position, Quaternion.identity, parent);
@@ -142,7 +146,7 @@ namespace Model
             var pathNumber = _pathCount++;
             var path = new GameObject("Path"+ pathNumber).AddComponent<PathGenerator>();
             path.Init(pathNumber, start, sidePath);
-            path.type = Prefabtype.Cube2;
+            path.type = PrefabType.Cube2;
             path.pathModel = this;
             paths.Add(path);
             return pathNumber;
@@ -178,7 +182,7 @@ namespace Model
 
         private List<PathGenerator> PathGeneratorsToKeep(int pathNumber, float playerPos)
         {
-            List<PathGenerator> toKeep = new List<PathGenerator>();
+            var toKeep = new List<PathGenerator>();
             var generatorByNumber = GetGeneratorByNumber(pathNumber);
             toKeep.Add(generatorByNumber);
             if (generatorByNumber.sidePath == -1 || GetGeneratorByNumber(generatorByNumber.sidePath) == null)

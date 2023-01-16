@@ -15,7 +15,7 @@ namespace Path
         public int pathNumber;
         public List<Cube> cubes;
         public int sidePath;
-        public PathModel.Prefabtype type;
+        public PathModel.PrefabType type;
         private bool _stopCreating;
         private Camera _camera;
 
@@ -148,6 +148,12 @@ namespace Path
                 case PathPart.RandomLog:
                     return pathModel.RandomLog.Create(grammar.NextPoint, pathNumber);
 
+                case PathPart.LastRightOne:
+                    return pathModel.LastRightOne.Create(grammar.NextPoint, pathNumber);
+                case PathPart.LastLeftOne:
+                    return pathModel.LastLeftOne.Create(grammar.NextPoint, pathNumber);
+                case PathPart.LastMiddleOne:
+                    return pathModel.LastMidOne.Create(grammar.NextPoint, pathNumber);
                 default:
                     return pathModel.Chaos.Create(grammar.NextPoint, pathNumber);
             }

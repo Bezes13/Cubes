@@ -8,7 +8,7 @@ namespace NonTerminals
 {
     public abstract class NonTerminal
     {
-        protected PathModel PathModel;
+        protected readonly PathModel PathModel;
         protected float Difficult;
 
         public NonTerminal(PathModel pathModel)

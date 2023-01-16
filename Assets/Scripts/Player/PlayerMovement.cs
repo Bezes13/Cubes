@@ -10,26 +10,25 @@ namespace Player
     {
         private const float JumpForce = 7f;
         private const float SideStepMultiplier = 0.25f;
-        private float _speedMultiplier = 2f;
-        private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 1.271f, 0.340319f);
-        private Vector3 _lastPosition = new Vector3(0,0,-1);
-        private int _pathNumber;
-
+        
         [SerializeField] private Animator animator;
         [SerializeField] private PointsObject pointsObject;
         [SerializeField] private PathModel model;
         [SerializeField] private ParticleSystem starExplosion;
 
+        private Vector3 _lastPosition = new Vector3(0, 0, -1);
         private CharacterController _controller;
-
         private float _sidestep;
         private float _currentJump;
         private float _heightBeforeJump;
-        private bool _doubleJump;
+        private float _speedMultiplier = 2f;
         private int _deadMultiplier = 1;
+        private int _nextPoint = 5;
+        private int _pathNumber;
         private bool _stopMultiplier = true;
-        public int nextPoint = 5;
+        private bool _doubleJump;
 
+        private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 1.271f, 0.340319f);
         private static readonly int Jump = Animator.StringToHash("Jump");
         private static readonly int Right = Animator.StringToHash("Right");
         private static readonly int Left = Animator.StringToHash("Left");
@@ -55,15 +54,16 @@ namespace Player
             _controller = GetComponent<CharacterController>();
             pointsObject.ResetPoints();
         }
-    
+
         void Update()
         {
-            if (transform.position.z > nextPoint && _speedMultiplier <= 3f)
+            if (transform.position.z > _nextPoint && _speedMultiplier <= 3f)
             {
-                nextPoint += 5;
+                _nextPoint += 5;
                 _speedMultiplier += 0.01f;
                 model.IncreaseDifficulty(0.01f);
             }
+
             if (Input.GetKeyDown(KeyCode.P))
             {
                 _stopMultiplier = !_stopMultiplier;
@@ -73,7 +73,7 @@ namespace Player
             {
                 return;
             }
-        
+
             Animations();
             // Check for Restart
             if (transform.position.y < _heightBeforeJump - 5.0f)
@@ -87,7 +87,7 @@ namespace Player
             var position = transform.position;
             return _controller.isGrounded ? position : new Vector3(position.x, _heightBeforeJump, position.z);
         }
-    
+
         private void Animations()
         {
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
@@ -109,6 +109,7 @@ namespace Player
                     }
                 }
             }
+
             if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
                 if (!_controller.isGrounded)
@@ -147,11 +148,14 @@ namespace Player
                     _pathNumber = obj.GetPathNumber();
                 }
             }
+
             if (_stopMultiplier)
             {
                 return;
             }
-            Vector3 moveVector = new Vector3((_sidestep - transform.position.x) * SideStepMultiplier, _currentJump* Time.deltaTime, _deadMultiplier * _speedMultiplier* Time.deltaTime);
+
+            Vector3 moveVector = new Vector3((_sidestep - transform.position.x) * SideStepMultiplier,
+                _currentJump * Time.deltaTime, _deadMultiplier * _speedMultiplier * Time.deltaTime);
             _controller.Move(moveVector);
             if (Math.Abs(_lastPosition.z - transform.position.z) < 0.001)
             {
@@ -159,9 +163,11 @@ namespace Player
             }
 
             _lastPosition = transform.position;
-            if(_stopMultiplier || _deadMultiplier == 0){
+            if (_stopMultiplier || _deadMultiplier == 0)
+            {
                 return;
             }
+
             pointsObject.AddPoints(1);
         }
 
@@ -181,7 +187,6 @@ namespace Player
                 starExplosion.Play();
                 Destroy(other.gameObject);
             }
-        
         }
 
         public void ResetPlayer()
@@ -189,7 +194,7 @@ namespace Player
             _deadMultiplier = 1;
             _stopMultiplier = true;
             _speedMultiplier = 2f;
-            nextPoint = 5;
+            _nextPoint = 5;
         }
 
         private void PlayerDead()
@@ -198,7 +203,7 @@ namespace Player
             {
                 return;
             }
-        
+
             _deadMultiplier = 0;
             Supyrb.Signals.Get<PlayerDeadSignal>().Dispatch();
             _controller.enabled = false;
