@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which resolves to any combination of a triple block
+    /// </summary>
     public class RandomTripletAtLeastOne : NonTerminal
     {
         public RandomTripletAtLeastOne(PathModel pathModel) : base(pathModel)
@@ -13,7 +16,7 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            List<PieceProbability> probabilities = new List<PieceProbability>
+            var probabilities = new List<PieceProbability>
             {
                 new PieceProbability(3, 30, PathPart.LeftBlock),
                 new PieceProbability(3, 30, PathPart.RightBlock),
@@ -24,7 +27,7 @@ namespace NonTerminals
             };
             var switchCase = GetNewPiece(probabilities);
 
-            return new Grammar {Part = switchCase, NextPoint = start };
+            return new Grammar {Part = switchCase, NextPoint = start};
         }
     }
 }

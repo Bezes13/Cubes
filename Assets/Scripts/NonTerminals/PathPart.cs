@@ -1,12 +1,15 @@
 namespace NonTerminals
 {
+    /// <summary>
+    /// PathParts represent Terminals and NonTerminals
+    /// </summary>
     public enum PathPart
     {
         LeftSweep,
         RightSweep,
         Hole,
         SingleSpike,
-        SingleBlock, 
+        SingleBlock,
         TripleBlock,
         UpStairs,
         Chaos,

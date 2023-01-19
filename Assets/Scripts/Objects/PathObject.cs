@@ -6,17 +6,22 @@ using Random = UnityEngine.Random;
 
 namespace Objects
 {
-    public class Cube : MonoBehaviour
+    /// <summary>
+    /// PathObject which is Part of the Path which gets created by the grammar, if the player passes the object,
+    /// it will get destroyed after a short delay
+    /// </summary>
+    public class PathObject : MonoBehaviour
     {
+        private const float FallSpeed = 2;
+
+        public Vector3 pos;
+
         private PlayerMovement _player;
         private PathGenerator _pathGenerator;
-
         private bool _dieHard;
-
         private double _seed;
-        private const float FallSpeed = 2;
-        public Vector3 pos;
         private bool _split;
+
         private int _pathNumber;
 
         public void Init(double seed, int pathNumber, PathGenerator pathGenerator1, bool split = false)
@@ -27,6 +32,17 @@ namespace Objects
             transform.position += Vector3.up;
             _seed = seed;
             _pathGenerator = pathGenerator1;
+        }
+
+        public int GetPathNumber()
+        {
+            return _pathNumber;
+        }
+
+        public void Kill()
+        {
+            _dieHard = true;
+            Destroy(gameObject, 1f + (float) _seed);
         }
 
         private void DieHard()
@@ -77,17 +93,6 @@ namespace Objects
                     DieHard();
                 }
             }
-        }
-
-        public int GetPathNumber()
-        {
-            return _pathNumber;
-        }
-
-        public void Kill()
-        {
-            _dieHard = true;
-            Destroy(gameObject, 1f + (float) _seed);
         }
     }
 }

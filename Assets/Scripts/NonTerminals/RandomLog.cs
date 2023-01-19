@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which resolves to a Log an any side
+    /// </summary>
     public class RandomLog : NonTerminal
     {
         public RandomLog(PathModel pathModel) : base(pathModel)
@@ -13,14 +16,14 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            List<PieceProbability> probabilities = new List<PieceProbability>
+            var probabilities = new List<PieceProbability>
             {
                 new PieceProbability(33, 40, PathPart.RightLog),
                 new PieceProbability(33, 40, PathPart.LeftLog),
                 new PieceProbability(34, 20, PathPart.Log),
             };
             var switchCase = GetNewPiece(probabilities);
-            return new Grammar {Part = switchCase, NextPoint = start };
+            return new Grammar {Part = switchCase, NextPoint = start};
         }
     }
 }

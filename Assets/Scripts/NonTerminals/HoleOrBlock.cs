@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which resolves either to triple Block or an Hole
+    /// </summary>
     public class HoleOrBlock : NonTerminal
     {
         public HoleOrBlock(PathModel pathModel) : base(pathModel)

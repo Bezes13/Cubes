@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// A NonTerminal Part which occurs after the UpStairs Part 
+    /// </summary>
     public class AfterStairs : NonTerminal
     {
         public AfterStairs(PathModel pathModel) : base(pathModel)
@@ -13,7 +16,7 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            List<PieceProbability> probabilities = new List<PieceProbability>
+            var probabilities = new List<PieceProbability>
             {
                 new PieceProbability(5, 10, PathPart.SingleSpike),
                 new PieceProbability(5, 10, PathPart.Hole),
@@ -21,7 +24,7 @@ namespace NonTerminals
             };
             var switchCase = GetNewPiece(probabilities);
 
-            return new Grammar {Part = switchCase, NextPoint = start };
+            return new Grammar {Part = switchCase, NextPoint = start};
         }
     }
 }

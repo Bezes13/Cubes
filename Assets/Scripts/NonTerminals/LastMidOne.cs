@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which has a higher Chance to have Block in the middle
+    /// </summary>
     public class LastMidOne : NonTerminal
     {
         public LastMidOne(PathModel pathModel) : base(pathModel)
@@ -20,7 +23,7 @@ namespace NonTerminals
             };
             var switchCase = GetNewPiece(probabilities);
 
-            return new Grammar {Part = switchCase, NextPoint = start };
+            return new Grammar {Part = switchCase, NextPoint = start};
         }
     }
 }

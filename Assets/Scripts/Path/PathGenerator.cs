@@ -10,19 +10,39 @@ namespace Path
     public class PathGenerator : MonoBehaviour
     {
         public PathModel pathModel;
-        public Vector3 start;
-        private Grammar _nextPoint;
-        public int pathNumber;
-        public List<Cube> cubes;
-        public int sidePath;
         public PathModel.PrefabType type;
+        public List<PathObject> cubes;
+        public Vector3 start;
+        public int pathNumber;
+        public int sidePath;
+
         private bool _stopCreating;
+
         private Camera _camera;
+
+        private Grammar _nextPoint;
+
+        public void Init(int initPathNumber, Vector3 startVec, int side)
+        {
+            pathNumber = initPathNumber;
+            start = startVec;
+            sidePath = side;
+        }
+
+        public void CreateInBetween(Grammar grammar)
+        {
+            SwitchCase(grammar);
+        }
+
+        public void StopCreating()
+        {
+            _stopCreating = true;
+        }
 
         private void Awake()
         {
-            cubes = new List<Cube>();
-            Supyrb.Signals.Get<RestartGameSignal>().AddListener(CreatePath);
+            cubes = new List<PathObject>();
+            Supyrb.Signals.Get<StartGameSignal>().AddListener(CreatePath);
         }
 
         private void Start()
@@ -33,7 +53,7 @@ namespace Path
 
         private void OnDestroy()
         {
-            Supyrb.Signals.Get<RestartGameSignal>().RemoveListener(CreatePath);
+            Supyrb.Signals.Get<StartGameSignal>().RemoveListener(CreatePath);
         }
 
         private void Update()
@@ -58,123 +78,48 @@ namespace Path
             _nextPoint = SwitchCase(_nextPoint);
         }
 
-        public void CreateInBetween(Grammar grammar)
-        {
-            SwitchCase(grammar);
-        }
-
         private Grammar SwitchCase(Grammar grammar)
         {
-            switch (grammar.Part)
+            return grammar.Part switch
             {
-                case PathPart.RightSweep:
-                    return pathModel.RightSweep.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.LeftSweep:
-                    return pathModel.LeftSweep.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.Hole:
-                    return pathModel.Hole.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.SingleSpike:
-                    return pathModel.SingleSpike.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.TripleBlock:
-                    return pathModel.TripleBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.UpStairs:
-                    return pathModel.UpStairs.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.AfterStairs:
-                    return pathModel.AfterStairs.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.NoHoleNoSpike:
-                    return pathModel.NoHoleOrSpike.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.AfterSweep:
-                    return pathModel.AfterSweep.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.AfterSpikeOrHole:
-                    return pathModel.AfterSpikeOrHole.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.PathSplitter:
-                    return pathModel.PathSplitter.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.RandomTripleAtLeastOne:
-                    return pathModel.RandomTripletAtLeastOne.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.LeftLog:
-                    return pathModel.LogLeft.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.Star:
-                    return pathModel.Star.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.SingleBlock:
-                    return pathModel.SingleBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.Chaos:
-                    return pathModel.Chaos.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.Log:
-                    return pathModel.Log.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.LeftBlock:
-                    return pathModel.LeftBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.RightBlock:
-                    return pathModel.RightBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.LeftRightBlock:
-                    return pathModel.LeftRightBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.LeftMiddleBlock:
-                    return pathModel.LeftMiddleBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.RightMiddleBlock:
-                    return pathModel.RightMiddleBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.AtLeastMiddleBlock:
-                    return pathModel.AtLeastMiddleBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.AtLeastRightBlock:
-                    return pathModel.AtLeastRightBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.AtLeastLeftBlock:
-                    return pathModel.AtLeastLeftBlock.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.RightLog:
-                    return pathModel.LogRight.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.RandomLog:
-                    return pathModel.RandomLog.Create(grammar.NextPoint, pathNumber);
-
-                case PathPart.LastRightOne:
-                    return pathModel.LastRightOne.Create(grammar.NextPoint, pathNumber);
-                case PathPart.LastLeftOne:
-                    return pathModel.LastLeftOne.Create(grammar.NextPoint, pathNumber);
-                case PathPart.LastMiddleOne:
-                    return pathModel.LastMidOne.Create(grammar.NextPoint, pathNumber);
-                default:
-                    return pathModel.Chaos.Create(grammar.NextPoint, pathNumber);
-            }
-        }
-
-        public void StopCreating()
-        {
-            _stopCreating = true;
+                PathPart.RightSweep => pathModel.RightSweep.Create(grammar.NextPoint, pathNumber),
+                PathPart.LeftSweep => pathModel.LeftSweep.Create(grammar.NextPoint, pathNumber),
+                PathPart.Hole => pathModel.Hole.Create(grammar.NextPoint, pathNumber),
+                PathPart.SingleSpike => pathModel.SingleSpike.Create(grammar.NextPoint, pathNumber),
+                PathPart.TripleBlock => pathModel.TripleBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.UpStairs => pathModel.UpStairs.Create(grammar.NextPoint, pathNumber),
+                PathPart.AfterStairs => pathModel.AfterStairs.Create(grammar.NextPoint, pathNumber),
+                PathPart.NoHoleNoSpike => pathModel.NoHoleOrSpike.Create(grammar.NextPoint, pathNumber),
+                PathPart.AfterSweep => pathModel.AfterSweep.Create(grammar.NextPoint, pathNumber),
+                PathPart.AfterSpikeOrHole => pathModel.AfterSpikeOrHole.Create(grammar.NextPoint, pathNumber),
+                PathPart.PathSplitter => pathModel.PathSplitter.Create(grammar.NextPoint, pathNumber),
+                PathPart.RandomTripleAtLeastOne => pathModel.RandomTripletAtLeastOne.Create(grammar.NextPoint, pathNumber),
+                PathPart.LeftLog => pathModel.LogLeft.Create(grammar.NextPoint, pathNumber),
+                PathPart.Star => pathModel.Star.Create(grammar.NextPoint, pathNumber),
+                PathPart.SingleBlock => pathModel.SingleBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.Chaos => pathModel.Chaos.Create(grammar.NextPoint, pathNumber),
+                PathPart.Log => pathModel.Log.Create(grammar.NextPoint, pathNumber),
+                PathPart.LeftBlock => pathModel.LeftBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.RightBlock => pathModel.RightBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.LeftRightBlock => pathModel.LeftRightBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.LeftMiddleBlock => pathModel.LeftMiddleBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.RightMiddleBlock => pathModel.RightMiddleBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.AtLeastMiddleBlock => pathModel.AtLeastMiddleBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.AtLeastRightBlock => pathModel.AtLeastRightBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.AtLeastLeftBlock => pathModel.AtLeastLeftBlock.Create(grammar.NextPoint, pathNumber),
+                PathPart.RightLog => pathModel.LogRight.Create(grammar.NextPoint, pathNumber),
+                PathPart.RandomLog => pathModel.RandomLog.Create(grammar.NextPoint, pathNumber),
+                PathPart.LastRightOne => pathModel.LastRightOne.Create(grammar.NextPoint, pathNumber),
+                PathPart.LastLeftOne => pathModel.LastLeftOne.Create(grammar.NextPoint, pathNumber),
+                PathPart.LastMiddleOne => pathModel.LastMidOne.Create(grammar.NextPoint, pathNumber),
+                _ => pathModel.Chaos.Create(grammar.NextPoint, pathNumber)
+            };
         }
 
         private void CreatePath()
         {
             pathModel.TripleBlock.Create(start, pathNumber);
             _nextPoint = pathModel.BlockPart.Create(start + new Vector3(0, 0, 1), pathNumber);
-        }
-
-        public void Init(int initPathNumber, Vector3 startVec, int side)
-        {
-            pathNumber = initPathNumber;
-            start = startVec;
-            sidePath = side;
         }
     }
 }

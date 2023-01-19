@@ -6,12 +6,13 @@ using Random = UnityEngine.Random;
 
 namespace NonTerminals
 {
+    // NonTerminals are parts of the grammar, which resolve to further NonTerminals or Terminals
     public abstract class NonTerminal
     {
         protected readonly PathModel PathModel;
         protected float Difficult;
 
-        public NonTerminal(PathModel pathModel)
+        protected NonTerminal(PathModel pathModel)
         {
             PathModel = pathModel;
         }
@@ -22,7 +23,7 @@ namespace NonTerminals
         }
 
         public abstract Grammar Create(Vector3 start, int pathNumber);
-        
+
         protected PathPart GetNewPiece(List<PieceProbability> probabilities)
         {
             var rnd = Random.value;
@@ -30,7 +31,7 @@ namespace NonTerminals
             var check = 0f;
             foreach (var piece in probabilities)
             {
-                check += (piece.Probablility + Difficult * (piece.Max - piece.Probablility)) / 100.0f;
+                check += (piece.Probability + Difficult * (piece.Max - piece.Probability)) / 100.0f;
                 if (rnd < check)
                 {
                     switchCase = piece.Piece;

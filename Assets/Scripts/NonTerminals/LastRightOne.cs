@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which has a higher Chance to have Block on the right side
+    /// </summary>
     public class LastRightOne : NonTerminal
     {
         public LastRightOne(PathModel pathModel) : base(pathModel)

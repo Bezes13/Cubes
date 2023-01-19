@@ -55,7 +55,7 @@ namespace Player
             pointsObject.ResetPoints();
         }
 
-        void Update()
+        private void Update()
         {
             if (transform.position.z > _nextPoint && _speedMultiplier <= 3f)
             {
@@ -74,7 +74,7 @@ namespace Player
                 return;
             }
 
-            Animations();
+            Movement();
             // Check for Restart
             if (transform.position.y < _heightBeforeJump - 5.0f)
             {
@@ -88,7 +88,7 @@ namespace Player
             return _controller.isGrounded ? position : new Vector3(position.x, _heightBeforeJump, position.z);
         }
 
-        private void Animations()
+        private void Movement()
         {
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
@@ -138,11 +138,10 @@ namespace Player
 
         private void FixedUpdate()
         {
-            RaycastHit hit;
             // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, 5f))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out var hit, 5f))
             {
-                var obj = hit.collider.gameObject.GetComponent<Cube>();
+                var obj = hit.collider.gameObject.GetComponent<PathObject>();
                 if (obj != null)
                 {
                     _pathNumber = obj.GetPathNumber();
@@ -173,20 +172,18 @@ namespace Player
 
         private void OnTriggerEnter(Collider other)
         {
-            Pyramid obj = other.GetComponent<Pyramid>();
+            var obj = other.GetComponent<Pyramid>();
             if (obj != null)
             {
                 PlayerDead();
             }
 
-            CollectableStar star = other.GetComponent<CollectableStar>();
-            if (star != null)
-            {
-                pointsObject.AddPoints(1000);
-                starExplosion.gameObject.SetActive(true);
-                starExplosion.Play();
-                Destroy(other.gameObject);
-            }
+            var star = other.GetComponent<CollectableStar>();
+            if (star == null) return;
+            pointsObject.AddPoints(1000);
+            starExplosion.gameObject.SetActive(true);
+            starExplosion.Play();
+            Destroy(other.gameObject);
         }
 
         public void ResetPlayer()

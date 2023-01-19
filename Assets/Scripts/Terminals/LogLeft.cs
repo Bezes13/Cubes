@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Terminals
 {
+    /// <summary>
+    /// Terminal which creates a Log on the left side and places triple blocks under the log with at least one on the left
+    /// </summary>
     public class LogLeft : Terminal
     {
         public LogLeft(PathModel pathModel) : base(pathModel)
@@ -20,9 +23,9 @@ namespace Terminals
             gen.CreateInBetween(PathModel.AtLeastLeftBlock.Create(start + Vector3.forward * 3, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastLeftBlock.Create(start + Vector3.forward * 4, pathNumber));
             gen.CreateInBetween(PathModel.AtLeastLeftBlock.Create(start + Vector3.forward * 5, pathNumber));
-            PathModel.CreateObject(PathModel.PrefabType.Log, start + new Vector3(-1,1,1), pathNumber);
+            PathModel.CreatePathObject(PathModel.PrefabType.Log, start + new Vector3(-1,1,1), pathNumber);
             
-            return new Grammar()
+            return new Grammar
             {
                 NextPoint = start + Vector3.forward * 5, 
                 Part = PathPart.Chaos

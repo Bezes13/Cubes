@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which resolves to a triple Part, but always has a Block in the middle
+    /// </summary>
     public class AtLeastMiddleBlock : NonTerminal
     {
         public AtLeastMiddleBlock(PathModel pathModel) : base(pathModel)
@@ -13,14 +16,16 @@ namespace NonTerminals
 
         public override Grammar Create(Vector3 start, int pathNumber)
         {
-            List<PieceProbability> probabilities = new List<PieceProbability>();
-            probabilities.Add(new PieceProbability(0, 80, PathPart.SingleBlock));
-            probabilities.Add(new PieceProbability(30, 10, PathPart.LeftMiddleBlock));
-            probabilities.Add(new PieceProbability(40, 0, PathPart.TripleBlock));
-            probabilities.Add(new PieceProbability(30, 10, PathPart.RightMiddleBlock));
+            var probabilities = new List<PieceProbability>
+            {
+                new PieceProbability(0, 80, PathPart.SingleBlock),
+                new PieceProbability(30, 10, PathPart.LeftMiddleBlock),
+                new PieceProbability(40, 0, PathPart.TripleBlock),
+                new PieceProbability(30, 10, PathPart.RightMiddleBlock)
+            };
             var switchCase = GetNewPiece(probabilities);
 
-            return new Grammar {Part = switchCase, NextPoint = start };
+            return new Grammar {Part = switchCase, NextPoint = start};
         }
     }
 }

@@ -15,13 +15,13 @@ namespace Model
     [CreateAssetMenu(fileName = "Model", menuName = "ScriptableObjects/SpawnManagerScriptableObject", order = 1)]
     public class PathModel : ScriptableObject
     {
-        [SerializeField] private Cube cubePrefab;
-        [SerializeField] private Cube cubePrefab2;
-        [SerializeField] private Cube pyramidPrefab;
-        [SerializeField] private Cube cubeOnTop;
-        [SerializeField] private Cube starPrefab;
+        private static readonly Vector3 StartVec = new Vector3(0, 0.5f, 5);
 
-        public List<PathGenerator> paths;
+        [SerializeField] private PathObject pathObjectPrefab;
+        [SerializeField] private PathObject pathObjectPrefab2;
+        [SerializeField] private PathObject pyramidPrefab;
+        [SerializeField] private PathObject logPrefab;
+        [SerializeField] private PathObject starPrefab;
 
         // NonTerminals
         public Chaos Chaos;
@@ -39,7 +39,7 @@ namespace Model
         public LastLeftOne LastLeftOne;
         public LastMidOne LastMidOne;
         public LastRightOne LastRightOne;
-        
+
         // Terminals
         public Hole Hole;
         public RandomTripletAtLeastOne RandomTripletAtLeastOne;
@@ -58,8 +58,9 @@ namespace Model
         public LeftMiddleBlock LeftMiddleBlock;
         public LeftRightBlock LeftRightBlock;
         public RightMiddleBlock RightMiddleBlock;
-        
+
         private Random _rnd;
+        private List<PathGenerator> _paths;
         private int _pathCount = 2;
 
         public enum PrefabType
@@ -75,10 +76,10 @@ namespace Model
         {
             ResetModel();
             _rnd = new Random();
-            paths = new List<PathGenerator> {new GameObject("Path").AddComponent<PathGenerator>()};
-            paths[0].pathModel = this;
-            paths[0].Init(0, new Vector3(0, 0.5f, 5), -1);
-            
+            _paths = new List<PathGenerator> {new GameObject("Path").AddComponent<PathGenerator>()};
+            _paths[0].pathModel = this;
+            _paths[0].Init(0, StartVec, -1);
+
             //Terminals
             RandomTripletAtLeastOne = new RandomTripletAtLeastOne(this);
             Hole = new Hole(this);
@@ -98,7 +99,7 @@ namespace Model
             LeftRightBlock = new LeftRightBlock(this);
             LeftMiddleBlock = new LeftMiddleBlock(this);
             RightMiddleBlock = new RightMiddleBlock(this);
-           
+
             //NonTerminals
             Chaos = new Chaos(this);
             AfterSweep = new AfterSweep(this);
@@ -116,26 +117,31 @@ namespace Model
             LastRightOne = new LastRightOne(this);
         }
 
-        public void CreateObject(PrefabType prefabType, Vector3 position, int pathNumber, bool split = false)
+        public void CreatePathObject(PrefabType prefabType, Vector3 position, int pathNumber, bool split = false)
         {
-            foreach (var generator in paths)
+            foreach (var generator in _paths)
             {
-                foreach (Cube cube in generator.cubes)
+                foreach (var cube in generator.cubes)
                 {
-                    if (Vector3.Distance(position, cube.pos)<0.1)
+                    if (Vector3.Distance(position, cube.pos) < 0.1)
                     {
                         return;
                     }
                 }
             }
+
             var gen = GetGeneratorByNumber(pathNumber);
             if (gen == null)
             {
                 return;
             }
-            Cube prefab = prefabType.Equals(PrefabType.Pyramid) ? pyramidPrefab : prefabType.Equals(PrefabType.Star) ? starPrefab : prefabType.Equals(PrefabType.Log) ? cubeOnTop : gen.type == PrefabType.Cube ? cubePrefab : cubePrefab2;
+
+            var prefab = prefabType.Equals(PrefabType.Pyramid) ? pyramidPrefab :
+                prefabType.Equals(PrefabType.Star) ? starPrefab :
+                prefabType.Equals(PrefabType.Log) ? logPrefab :
+                gen.type == PrefabType.Cube ? pathObjectPrefab : pathObjectPrefab2;
             var parent = gen.transform;
-            
+
             var obj = Instantiate(prefab, position, Quaternion.identity, parent);
             gen.cubes.Add(obj);
             obj.Init(_rnd.NextDouble(), pathNumber, gen, split);
@@ -144,24 +150,25 @@ namespace Model
         public int CreateNewPath(Vector3 start, int sidePath)
         {
             var pathNumber = _pathCount++;
-            var path = new GameObject("Path"+ pathNumber).AddComponent<PathGenerator>();
+            var path = new GameObject("Path-" + pathNumber).AddComponent<PathGenerator>();
             path.Init(pathNumber, start, sidePath);
             path.type = PrefabType.Cube2;
             path.pathModel = this;
-            paths.Add(path);
+            _paths.Add(path);
             return pathNumber;
         }
 
         public void DestroyPath(int pathNumberToKeep, Vector3 playerPos)
         {
             var toKeep = PathGeneratorsToKeep(pathNumberToKeep, playerPos.z);
-            var copyPaths = paths.GetRange(0, paths.Count);
+            var copyPaths = _paths.GetRange(0, _paths.Count);
             foreach (var generator in copyPaths)
             {
                 if (toKeep.Contains(generator))
                 {
                     continue;
                 }
+
                 RemovePath(generator);
             }
         }
@@ -173,57 +180,15 @@ namespace Model
             AfterSpikeOrHole.IncreaseDifficult(value);
             NoHoleOrSpike.IncreaseDifficult(value);
             BlockPart.IncreaseDifficult(value);
-            PathSplitter.IncreaseDifficult(value);
             AfterStairs.IncreaseDifficult(value);
             AtLeastMiddleBlock.IncreaseDifficult(value);
             AtLeastRightBlock.IncreaseDifficult(value);
             AtLeastLeftBlock.IncreaseDifficult(value);
         }
 
-        private List<PathGenerator> PathGeneratorsToKeep(int pathNumber, float playerPos)
-        {
-            var toKeep = new List<PathGenerator>();
-            var generatorByNumber = GetGeneratorByNumber(pathNumber);
-            toKeep.Add(generatorByNumber);
-            if (generatorByNumber.sidePath == -1 || GetGeneratorByNumber(generatorByNumber.sidePath) == null)
-            {
-                foreach (var generator in paths)
-                {
-
-                    if (generator.sidePath == pathNumber)
-                    {
-                        if (generator.start.z - 1 < playerPos)
-                        {
-                            continue;
-                        }
-                        toKeep.Add(generator);
-                        AddFurtherPaths(generator.pathNumber, toKeep);
-                    }
-                }
-            }
-            else
-            {
-                AddFurtherPaths(pathNumber, toKeep);
-            }
-
-            return toKeep;
-        }
-
-        private void AddFurtherPaths(int generatorPathNumber, List<PathGenerator> toKeep)
-        {
-            foreach (var generator in paths)
-            {
-                if (generator.sidePath == generatorPathNumber)
-                {
-                    toKeep.Add(generator);
-                    AddFurtherPaths(generator.pathNumber, toKeep);
-                }
-            }
-        }
-
         public PathGenerator GetGeneratorByNumber(int number)
         {
-            foreach (PathGenerator generator in paths)
+            foreach (PathGenerator generator in _paths)
             {
                 if (generator.pathNumber.Equals(number))
                 {
@@ -234,32 +199,75 @@ namespace Model
             return null;
         }
 
+        private List<PathGenerator> PathGeneratorsToKeep(int pathNumber, float playerPos)
+        {
+            var toKeep = new List<PathGenerator>();
+            var generatorByNumber = GetGeneratorByNumber(pathNumber);
+            toKeep.Add(generatorByNumber);
+            if (generatorByNumber.sidePath == -1 || GetGeneratorByNumber(generatorByNumber.sidePath) == null)
+            {
+                foreach (var generator in _paths)
+                {
+                    if (generator.sidePath == pathNumber)
+                    {
+                        if (generator.start.z - 1 < playerPos)
+                        {
+                            continue;
+                        }
+
+                        toKeep.Add(generator);
+                        AddFurtherPathsToKeep(generator.pathNumber, toKeep);
+                    }
+                }
+            }
+            else
+            {
+                AddFurtherPathsToKeep(pathNumber, toKeep);
+            }
+
+            return toKeep;
+        }
+
+        private void AddFurtherPathsToKeep(int generatorPathNumber, List<PathGenerator> toKeep)
+        {
+            foreach (var generator in _paths)
+            {
+                if (generator.sidePath == generatorPathNumber)
+                {
+                    toKeep.Add(generator);
+                    AddFurtherPathsToKeep(generator.pathNumber, toKeep);
+                }
+            }
+        }
+
         private void RemovePath(PathGenerator gen)
         {
-            foreach (Cube child in gen.cubes)
+            foreach (PathObject child in gen.cubes)
             {
                 child.Kill();
             }
 
             Destroy(gen.gameObject, 2f);
             gen.StopCreating();
-            paths.Remove(gen);
+            _paths.Remove(gen);
         }
 
         private void ResetModel()
         {
-            if (paths == null)
+            if (_paths == null)
             {
                 return;
             }
-            foreach (var path in paths)
+
+            foreach (var path in _paths)
             {
                 if (path != null)
                 {
-                    Destroy(path.gameObject);   
+                    Destroy(path.gameObject);
                 }
             }
-            paths.Clear();
+
+            _paths.Clear();
         }
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Terminals
 {
+    /// <summary>
+    /// Terminals are part of the grammar which resolve directly to pathObjects which are directly created.
+    /// </summary>
     public abstract class Terminal
     {
         protected PathModel PathModel;

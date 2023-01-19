@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NonTerminals
 {
+    /// <summary>
+    /// NonTerminal Part which resolves to a triple Part, but always has a Block on the left side
+    /// </summary>
     public class AtLeastLeftBlock : NonTerminal
     {
         public AtLeastLeftBlock(PathModel pathModel) : base(pathModel)
@@ -22,7 +25,7 @@ namespace NonTerminals
             };
             var switchCase = GetNewPiece(probabilities);
 
-            return new Grammar {Part = switchCase, NextPoint = start };
+            return new Grammar {Part = switchCase, NextPoint = start};
         }
     }
 }
