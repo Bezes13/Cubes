@@ -119,7 +119,7 @@ namespace Path
         private void CreatePath()
         {
             pathModel.TripleBlock.Create(start, pathNumber);
-            _nextPoint = pathModel.BlockPart.Create(start + new Vector3(0, 0, 1), pathNumber);
+            _nextPoint = pathModel.Chaos.Create(start + new Vector3(0, 0, 1), pathNumber);
         }
     }
 }

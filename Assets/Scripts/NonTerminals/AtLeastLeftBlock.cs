@@ -18,9 +18,9 @@ namespace NonTerminals
         {
             var probabilities = new List<PieceProbability>
             {
-                new PieceProbability(0, 80, PathPart.LeftBlock),
+                new PieceProbability(10, 80, PathPart.LeftBlock),
                 new PieceProbability(30, 10, PathPart.LeftMiddleBlock),
-                new PieceProbability(40, 0, PathPart.TripleBlock),
+                new PieceProbability(30, 0, PathPart.TripleBlock),
                 new PieceProbability(30, 10, PathPart.LeftRightBlock)
             };
             var switchCase = GetNewPiece(probabilities);

@@ -63,7 +63,6 @@ namespace Player
                 _speedMultiplier += 0.01f;
                 model.IncreaseDifficulty(0.01f);
             }
-
             if (Input.GetKeyDown(KeyCode.P))
             {
                 _stopMultiplier = !_stopMultiplier;
@@ -179,7 +178,10 @@ namespace Player
             }
 
             var star = other.GetComponent<CollectableStar>();
-            if (star == null) return;
+            if (star == null)
+            {
+                return;
+            }
             pointsObject.AddPoints(1000);
             starExplosion.gameObject.SetActive(true);
             starExplosion.Play();

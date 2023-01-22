@@ -25,8 +25,6 @@ namespace Model
 
         // NonTerminals
         public Chaos Chaos;
-        public HoleOrBlock HoleOrBlock;
-        public BlockPart BlockPart;
         public AfterSweep AfterSweep;
         public AfterSpikeOrHole AfterSpikeOrHole;
         public NoHoleOrSpike NoHoleOrSpike;
@@ -83,7 +81,6 @@ namespace Model
             //Terminals
             RandomTripletAtLeastOne = new RandomTripletAtLeastOne(this);
             Hole = new Hole(this);
-            HoleOrBlock = new HoleOrBlock(this);
             LeftSweep = new LeftSweep(this);
             RightSweep = new RightSweep(this);
             SingleBlock = new SingleBlock(this);
@@ -105,7 +102,6 @@ namespace Model
             AfterSweep = new AfterSweep(this);
             AfterSpikeOrHole = new AfterSpikeOrHole(this);
             NoHoleOrSpike = new NoHoleOrSpike(this);
-            BlockPart = new BlockPart(this);
             PathSplitter = new PathSplitter(this);
             AfterStairs = new AfterStairs(this);
             AtLeastMiddleBlock = new AtLeastMiddleBlock(this);
@@ -179,7 +175,6 @@ namespace Model
             AfterSweep.IncreaseDifficult(value);
             AfterSpikeOrHole.IncreaseDifficult(value);
             NoHoleOrSpike.IncreaseDifficult(value);
-            BlockPart.IncreaseDifficult(value);
             AfterStairs.IncreaseDifficult(value);
             AtLeastMiddleBlock.IncreaseDifficult(value);
             AtLeastRightBlock.IncreaseDifficult(value);
