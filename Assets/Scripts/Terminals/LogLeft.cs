@@ -27,7 +27,7 @@ namespace Terminals
             
             return new Grammar
             {
-                NextPoint = start + Vector3.forward * 5, 
+                NextPoint = start + Vector3.forward * 6, 
                 Part = PathPart.Chaos
             };
         }

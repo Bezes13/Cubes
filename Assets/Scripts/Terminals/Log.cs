@@ -26,7 +26,7 @@ namespace Terminals
             PathModel.CreatePathObject(PathModel.PrefabType.Log, start + Vector3.forward + Vector3.up, pathNumber);
             return new Grammar
             {
-                NextPoint = start + Vector3.forward * 5, 
+                NextPoint = start + Vector3.forward * 6, 
                 Part = PathPart.Chaos
             };
         }

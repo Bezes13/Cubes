@@ -20,6 +20,8 @@ namespace NonTerminals
             {
                 new PieceProbability(5, 5, PathPart.LeftSweep),
                 new PieceProbability(5, 5, PathPart.RightSweep),
+                new PieceProbability(6, 6, PathPart.Hole),
+                new PieceProbability(6, 6, PathPart.SingleSpike),
                 new PieceProbability(2, 10, PathPart.UpStairs),
                 new PieceProbability(8, 3, PathPart.RandomLog),
                 new PieceProbability(1, 1, PathPart.Star),
@@ -27,15 +29,13 @@ namespace NonTerminals
                 new PieceProbability(40, 0, PathPart.TripleBlock)
             };
             var switchCase = GetNewPiece(probabilities);
-
-            var gen = PathModel.GetGeneratorByNumber(pathNumber);
+            
             switch (switchCase)
             {
                 case PathPart.Hole:
-                    gen.CreateInBetween(PathModel.Hole.Create(start, pathNumber));
                     return new Grammar {Part = PathPart.NoHoleNoSpike, NextPoint = start + Vector3.forward};
                 case PathPart.SingleSpike:
-                    gen.CreateInBetween(PathModel.SingleSpike.Create(start, pathNumber));
+                    PathModel.SingleSpike.Create(start, pathNumber);
                     return new Grammar {Part = PathPart.NoHoleNoSpike, NextPoint = start + Vector3.forward};
                 default:
                     return new Grammar {Part = switchCase, NextPoint = start};
