@@ -10,7 +10,7 @@ namespace NonTerminals
     public abstract class NonTerminal
     {
         protected readonly PathModel PathModel;
-        protected float Difficult;
+        private float _difficult;
 
         protected NonTerminal(PathModel pathModel)
         {
@@ -19,7 +19,7 @@ namespace NonTerminals
 
         public void IncreaseDifficult(float value)
         {
-            Difficult += value;
+            _difficult += value;
         }
 
         public abstract Grammar Create(Vector3 start, int pathNumber);
@@ -31,7 +31,7 @@ namespace NonTerminals
             var check = 0f;
             foreach (var piece in probabilities)
             {
-                check += (piece.Probability + Difficult * (piece.Max - piece.Probability)) / 100.0f;
+                check += (piece.Probability + _difficult * (piece.Max - piece.Probability)) / 100.0f;
                 if (rnd < check)
                 {
                     switchCase = piece.Piece;

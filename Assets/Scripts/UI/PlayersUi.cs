@@ -12,7 +12,7 @@ namespace UI
     /// </summary>
     public class PlayersUi : MonoBehaviour
     {
-        const float Duration = 3f;
+        private const float Duration = 3f;
         
         [SerializeField] private TextMeshProUGUI currentPoints;
         [SerializeField] private TextMeshProUGUI pathWarning;

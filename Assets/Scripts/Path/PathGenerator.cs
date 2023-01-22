@@ -29,6 +29,10 @@ namespace Path
             sidePath = side;
         }
 
+        /// <summary>
+        /// Can be used to create a Terminal, without taking care of the return value.
+        /// </summary>
+        /// <param name="grammar"></param>
         public void CreateInBetween(Grammar grammar)
         {
             SwitchCase(grammar);

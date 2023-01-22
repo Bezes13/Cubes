@@ -22,8 +22,7 @@ namespace Terminals
 
             // first block
             PathModel.CreatePathObject(PathModel.PrefabType.Cube, start, pathNumber, true);
-
-
+            
             // first sweep
             PathModel.LeftSweep.Create(start + Vector3.forward, newPath);
             PathModel.RightSweep.Create(start + Vector3.forward, pathNumber);
