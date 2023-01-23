@@ -1140,7 +1140,7 @@ PrefabInstance:
       objectReference: {fileID: 1124073480}
     - target: {fileID: 6666192958956796871, guid: 1c06c9806fd6c4747bad21e27e3ccf2c, type: 3}
       propertyPath: m_Name
-      value: ResultScreen
+      value: MainScreen
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c06c9806fd6c4747bad21e27e3ccf2c, type: 3}

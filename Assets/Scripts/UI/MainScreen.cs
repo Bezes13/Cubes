@@ -10,7 +10,7 @@ namespace UI
     /// <summary>
     /// this class handles the start and result screen, with the start button and the highScore board
     /// </summary>
-    public class ResultScreen : MonoBehaviour
+    public class MainScreen : MonoBehaviour
     {
         public string PlayerName { get; set; }
         [SerializeField] private PathModel pathModel;

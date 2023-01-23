@@ -2490,7 +2490,7 @@ GameObject:
   - component: {fileID: 6644697800773237066}
   - component: {fileID: 6624995920520378418}
   m_Layer: 5
-  m_Name: ResultScreen
+  m_Name: MainScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2608,7 +2608,7 @@ MonoBehaviour:
   - {fileID: 1396929963}
   - {fileID: 1836494865}
   startButton: {fileID: 7949732118074133914}
-  Image: {fileID: 4731953307657436552}
+  image: {fileID: 0}
   inputField: {fileID: 910062984}
 --- !u!1 &8912464584002714096
 GameObject:
