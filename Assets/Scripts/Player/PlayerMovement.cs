@@ -15,6 +15,10 @@ namespace Player
         [SerializeField] private PointsObject pointsObject;
         [SerializeField] private PathModel model;
         [SerializeField] private ParticleSystem starExplosion;
+        
+        [SerializeField] private AudioSource audioSource; 
+        [SerializeField] private AudioClip deadSound;
+        [SerializeField] private AudioClip collectSound;
 
         private Vector3 _lastPosition = new Vector3(0, 0, -1);
         private CharacterController _controller;
@@ -185,6 +189,8 @@ namespace Player
             pointsObject.AddPoints(1000);
             starExplosion.gameObject.SetActive(true);
             starExplosion.Play();
+            audioSource.clip = collectSound;
+            audioSource.Play();
             Destroy(other.gameObject);
         }
 
@@ -205,6 +211,8 @@ namespace Player
 
             _deadMultiplier = 0;
             Supyrb.Signals.Get<PlayerDeadSignal>().Dispatch();
+            audioSource.clip = deadSound;
+            audioSource.Play();
             _controller.enabled = false;
             _controller.transform.position = StartPoint;
             _controller.enabled = true;

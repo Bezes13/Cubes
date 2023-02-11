@@ -24,9 +24,9 @@ namespace NonTerminals
                 new PieceProbability(3, 3, PathPart.UpStairs),
                 new PieceProbability(2, 1, PathPart.PathSplitter),
                 new PieceProbability(5, 15, PathPart.Hole),
-                new PieceProbability(1, 1, PathPart.Star),
+                new PieceProbability(2, 2, PathPart.Star),
                 new PieceProbability(20, 50, PathPart.RandomTripleAtLeastOne),
-                new PieceProbability(8, 3, PathPart.RandomLog)
+                new PieceProbability(7, 2, PathPart.RandomLog)
             };
             var switchCase = GetNewPiece(probabilities);
 
