@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -140,7 +140,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1444,7 +1444,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 956ad2f73332544fd87365087825cc4f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1540,7 +1540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd0758771e93411f90fd7d3720c14f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGame: {fileID: 8300000, guid: 07f391589664f4e85904fa28802b4aa8, type: 3}
+  inGame: {fileID: 8300000, guid: 6306498bbea9342a58ad61d5f7128830, type: 3}
   menu: {fileID: 8300000, guid: 956ad2f73332544fd87365087825cc4f, type: 3}
 --- !u!1001 &8818258067125743326
 PrefabInstance:
@@ -1602,9 +1602,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: cc2d4ba08eacf49d5b18d812322d345f, type: 2}
     - target: {fileID: 8818258068249816792, guid: a696a2b925b104dbd8b195641dd3b112, type: 3}
+      propertyPath: dashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+    - target: {fileID: 8818258068249816792, guid: a696a2b925b104dbd8b195641dd3b112, type: 3}
       propertyPath: deadSound
       value: 
-      objectReference: {fileID: 8300000, guid: ff5f85da24bc943d1abdc5760a22bc81, type: 3}
+      objectReference: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
+    - target: {fileID: 8818258068249816792, guid: a696a2b925b104dbd8b195641dd3b112, type: 3}
+      propertyPath: jumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
     - target: {fileID: 8818258068249816792, guid: a696a2b925b104dbd8b195641dd3b112, type: 3}
       propertyPath: audioSource
       value: 

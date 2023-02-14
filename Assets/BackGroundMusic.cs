@@ -8,6 +8,7 @@ public class BackGroundMusic : MonoBehaviour
     [SerializeField] private AudioClip inGame;
     [SerializeField] private AudioClip menu;
     private AudioSource _audioSource;
+    private bool _inGame;
     
     
     void Awake()
@@ -19,6 +20,7 @@ public class BackGroundMusic : MonoBehaviour
 
     private void ChangeMusic()
     {
+        _inGame = false;
         StartCoroutine(StartMenuMusic());
     }
 
@@ -26,12 +28,16 @@ public class BackGroundMusic : MonoBehaviour
     {
         _audioSource.Stop();
         yield return new WaitForSeconds(2);
-        _audioSource.clip = menu;
-        _audioSource.Play();
+        if (!_inGame)
+        {
+            _audioSource.clip = menu;
+            _audioSource.Play();     
+        }
     }
 
     private void StartGameMusic()
     {
+        _inGame = true;
         _audioSource.clip = inGame;
         _audioSource.Play();
     }

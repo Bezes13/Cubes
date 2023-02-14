@@ -19,7 +19,8 @@ namespace Player
         [SerializeField] private AudioSource audioSource; 
         [SerializeField] private AudioClip deadSound;
         [SerializeField] private AudioClip collectSound;
-
+        [SerializeField] private AudioClip jumpSound;
+        [SerializeField] private AudioClip dashSound;
         private Vector3 _lastPosition = new Vector3(0, 0, -1);
         private CharacterController _controller;
         private float _sidestep;
@@ -101,6 +102,8 @@ namespace Player
                     animator.SetTrigger(Jump);
                     _currentJump = JumpForce;
                     _doubleJump = false;
+                    audioSource.clip = jumpSound;
+                    audioSource.Play();
                 }
                 else
                 {
@@ -109,6 +112,8 @@ namespace Player
                         animator.SetTrigger(Jump);
                         _currentJump = JumpForce;
                         _doubleJump = true;
+                        audioSource.clip = jumpSound;
+                        audioSource.Play();
                     }
                 }
             }
@@ -130,12 +135,16 @@ namespace Player
             {
                 animator.SetTrigger(Left);
                 _sidestep = _sidestep != transform.position.x ? _sidestep - 1 : transform.position.x - 1f;
+                audioSource.clip = dashSound;
+                audioSource.Play();
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 animator.SetTrigger(Right);
                 _sidestep = _sidestep != transform.position.x ? _sidestep + 1 : transform.position.x + 1f;
+                audioSource.clip = dashSound;
+                audioSource.Play();
             }
         }
 
