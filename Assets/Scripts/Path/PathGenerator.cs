@@ -1,58 +1,45 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Model;
-using NonTerminals;
-using Objects;
+using Player;
 using Signals;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Path
 {
     public class PathGenerator : MonoBehaviour
     {
         public PathModel pathModel;
-        public PathModel.PrefabType type;
-        public List<PathObject> cubes;
         public Vector3 start;
-        public int pathNumber;
-        public int sidePath;
-
         private bool _stopCreating;
-
+        private List<int> _activeLines;
+        private List<(int, int)> _buildedLines;
         private Camera _camera;
+        private PlayerMovement _player;
+        private const int ActiveLinesRange = 7;
 
-        private Grammar _nextPoint;
-
-        public void Init(int initPathNumber, Vector3 startVec, int side)
+        public void Init(Vector3 startVec)
         {
-            pathNumber = initPathNumber;
             start = startVec;
-            sidePath = side;
-        }
+            _camera = Camera.main;
+            _player = FindObjectOfType<PlayerMovement>();
+            for (int i = 0; i < ActiveLinesRange; i++)
+            {
+                var line = (int)start.x + (int)_player.transform.position.x + i;
+                _activeLines.Add(line);
+            }
 
-        /// <summary>
-        /// Can be used to create a Terminal, without taking care of the return value.
-        /// </summary>
-        /// <param name="grammar"></param>
-        public void CreateInBetween(Grammar grammar)
-        {
-            SwitchCase(grammar);
-        }
-
-        public void StopCreating()
-        {
-            _stopCreating = true;
+            CreatePath();
         }
 
         private void Awake()
         {
-            cubes = new List<PathObject>();
-            Supyrb.Signals.Get<StartGameSignal>().AddListener(CreatePath);
-        }
-
-        private void Start()
-        {
-            _camera = Camera.main;
-            CreatePath();
+            _activeLines = new List<int>();
+            _buildedLines = new List<(int, int)>();
+            _player = FindObjectOfType<PlayerMovement>();
+            //Supyrb.Signals.Get<StartGameSignal>().AddListener(CreatePath);
         }
 
         private void OnDestroy()
@@ -62,6 +49,22 @@ namespace Path
 
         private void Update()
         {
+            for (int i = 0; i < ActiveLinesRange; i++)
+            {
+                var line = (int)start.x + (int)_player.transform.position.x + i;
+                if (!_activeLines.Contains(line))
+                {
+                    BuildLine(line);
+                }
+            }
+
+            _activeLines.Clear();
+            for (int i = 0; i < ActiveLinesRange; i++)
+            {
+                var line = (int)start.x + (int)_player.transform.position.x + i;
+                _activeLines.Add(line);
+            }
+            
             ContinuePath();
         }
 
@@ -72,58 +75,62 @@ namespace Path
                 return;
             }
 
-            var screenPoint = _camera.WorldToViewportPoint(_nextPoint.NextPoint);
-            var onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 0.9;
+            var screenPoint = _camera.WorldToViewportPoint(start);
+            var onScreen = screenPoint.y > 0 && screenPoint.y < 0.8;
             if (!onScreen)
             {
                 return;
             }
 
-            _nextPoint = SwitchCase(_nextPoint);
-        }
-
-        private Grammar SwitchCase(Grammar grammar)
-        {
-            return grammar.Part switch
-            {
-                PathPart.RightSweep => pathModel.RightSweep.Create(grammar.NextPoint, pathNumber),
-                PathPart.LeftSweep => pathModel.LeftSweep.Create(grammar.NextPoint, pathNumber),
-                PathPart.Hole => pathModel.Hole.Create(grammar.NextPoint, pathNumber),
-                PathPart.SingleSpike => pathModel.SingleSpike.Create(grammar.NextPoint, pathNumber),
-                PathPart.TripleBlock => pathModel.TripleBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.UpStairs => pathModel.UpStairs.Create(grammar.NextPoint, pathNumber),
-                PathPart.AfterStairs => pathModel.AfterStairs.Create(grammar.NextPoint, pathNumber),
-                PathPart.NoHoleNoSpike => pathModel.NoHoleOrSpike.Create(grammar.NextPoint, pathNumber),
-                PathPart.AfterSweep => pathModel.AfterSweep.Create(grammar.NextPoint, pathNumber),
-                PathPart.AfterSpikeOrHole => pathModel.AfterSpikeOrHole.Create(grammar.NextPoint, pathNumber),
-                PathPart.PathSplitter => pathModel.PathSplitter.Create(grammar.NextPoint, pathNumber),
-                PathPart.RandomTripleAtLeastOne => pathModel.RandomTripletAtLeastOne.Create(grammar.NextPoint, pathNumber),
-                PathPart.LeftLog => pathModel.LogLeft.Create(grammar.NextPoint, pathNumber),
-                PathPart.Star => pathModel.Star.Create(grammar.NextPoint, pathNumber),
-                PathPart.SingleBlock => pathModel.SingleBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.Chaos => pathModel.Chaos.Create(grammar.NextPoint, pathNumber),
-                PathPart.Log => pathModel.Log.Create(grammar.NextPoint, pathNumber),
-                PathPart.LeftBlock => pathModel.LeftBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.RightBlock => pathModel.RightBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.LeftRightBlock => pathModel.LeftRightBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.LeftMiddleBlock => pathModel.LeftMiddleBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.RightMiddleBlock => pathModel.RightMiddleBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.AtLeastMiddleBlock => pathModel.AtLeastMiddleBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.AtLeastRightBlock => pathModel.AtLeastRightBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.AtLeastLeftBlock => pathModel.AtLeastLeftBlock.Create(grammar.NextPoint, pathNumber),
-                PathPart.RightLog => pathModel.LogRight.Create(grammar.NextPoint, pathNumber),
-                PathPart.RandomLog => pathModel.RandomLog.Create(grammar.NextPoint, pathNumber),
-                PathPart.LastRightOne => pathModel.LastRightOne.Create(grammar.NextPoint, pathNumber),
-                PathPart.LastLeftOne => pathModel.LastLeftOne.Create(grammar.NextPoint, pathNumber),
-                PathPart.LastMiddleOne => pathModel.LastMidOne.Create(grammar.NextPoint, pathNumber),
-                _ => pathModel.Chaos.Create(grammar.NextPoint, pathNumber)
-            };
+            start += Vector3.forward;
+            CreatePath();
         }
 
         private void CreatePath()
         {
-            pathModel.TripleBlock.Create(start, pathNumber);
-            _nextPoint = pathModel.Chaos.Create(start + new Vector3(0, 0, 1), pathNumber);
+            _buildedLines.RemoveAll(tuple => _activeLines.Contains(tuple.Item1));
+            foreach (var line in _activeLines)
+            {
+                CreateAtPos(new Vector3(line, start.y, start.z));
+                _buildedLines.Add((line, (int) start.z + 1));
+            }
+        }
+
+        private void BuildLine(int line)
+        {
+            var start = (int)_player.PlayerPos().z;
+            var buildLine = _buildedLines.FindAll(tuple => tuple.Item1 == line);
+            if (buildLine.Count == 1)
+            {
+                start = buildLine[0].Item2;
+            }
+
+            var end = (int)this.start.z + 1;
+            for (int i = start; i < end; i++)
+            {
+                CreateAtPos(new Vector3(line, this.start.y, i));
+            }
+
+            _buildedLines.Add((line, end + 1));
+        }
+
+        private void CreateAtPos(Vector3 position)
+        {
+            print(this.gameObject.GetInstanceID());
+            print(position.z);
+            pathModel.CreatePathObject(PathModel.PrefabType.Cube, position);
+            if (Random.value <= 0.3)
+            {
+                pathModel.CreatePathObject(PathModel.PrefabType.Cube, position + Vector3.up);
+                if (Random.value <= 0.1)
+                {
+                    pathModel.CreatePathObject(PathModel.PrefabType.Coin, position + Vector3.up*2);
+                }
+            }
+            if (Random.value >= 0.9)
+            {
+                pathModel.CreatePathObject(PathModel.PrefabType.Coin, position + Vector3.up);
+            }
         }
     }
 }

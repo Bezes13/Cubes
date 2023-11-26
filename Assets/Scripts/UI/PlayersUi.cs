@@ -18,6 +18,8 @@ namespace UI
         [SerializeField] private TextMeshProUGUI pathWarning;
         [SerializeField] private PointsObject pointsObject;
         [SerializeField] private GameObject warningImage;
+        [SerializeField] private GameObject PauseText;
+        [SerializeField] private GameObject ContinueButton;
 
         private bool _isActive;
 
@@ -30,6 +32,20 @@ namespace UI
         public void Update()
         {
             currentPoints.text = pointsObject.GetPoints().ToString();
+        }
+
+        public void PauseGame()
+        {
+            Supyrb.Signals.Get<PauseSignal>().Dispatch();
+            PauseText.SetActive(!PauseText.activeSelf);
+            ContinueButton.SetActive(!ContinueButton.activeSelf);
+        }
+
+        public void UnPauseGame()
+        {
+            Supyrb.Signals.Get<UnPauseSignal>().Dispatch();
+            PauseText.SetActive(false);
+            ContinueButton.SetActive(false);
         }
 
         private void Warning()

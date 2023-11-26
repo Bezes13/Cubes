@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 namespace Objects
 {
     /// <summary>
-    /// PathObject which is Part of the Path which gets created by the grammar, if the player passes the object,
+    /// PathObject which is Part of the Path which gets created by the PathGenerator, if the player passes the object,
     /// it will get destroyed after a short delay
     /// </summary>
     public class PathObject : MonoBehaviour
@@ -24,14 +24,11 @@ namespace Objects
 
         private int _pathNumber;
 
-        public void Init(double seed, int pathNumber, PathGenerator pathGenerator1, bool split = false)
+        public void Init(double seed)
         {
-            _pathNumber = pathNumber;
-            _split = split;
             pos = transform.position;
             transform.position += Vector3.up;
             _seed = seed;
-            _pathGenerator = pathGenerator1;
         }
 
         public int GetPathNumber()
@@ -54,18 +51,6 @@ namespace Objects
 
             _dieHard = true;
             Destroy(gameObject, 1f);
-            if (_pathGenerator)
-            {
-                _pathGenerator.cubes.Remove(this);
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (_pathGenerator)
-            {
-                _pathGenerator.cubes.Remove(this);
-            }
         }
 
         private void Awake()
@@ -92,6 +77,15 @@ namespace Objects
                 {
                     DieHard();
                 }
+            }
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            var obj = other.GetComponent<Projectile>();
+            if (obj != null)
+            {
+                Destroy(gameObject);
             }
         }
     }

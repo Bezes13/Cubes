@@ -17,3 +17,4 @@ MonoBehaviour:
   pyramidPrefab: {fileID: 4702193665902710793, guid: 9c7934a224a184aa4a41076cd67e4c6d, type: 3}
   logPrefab: {fileID: 1893768267222062916, guid: 0deb335b35ced424ab3a154c400f4da5, type: 3}
   starPrefab: {fileID: 1957653897601354615, guid: 62406f7523c569c41ade39955fbcc193, type: 3}
+  coinPrefab: {fileID: 3270393918233383528, guid: 360e5bbc8589379448a6e4a37a6565f4, type: 3}

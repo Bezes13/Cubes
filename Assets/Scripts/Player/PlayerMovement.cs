@@ -2,6 +2,7 @@ using System;
 using Model;
 using Objects;
 using Signals;
+using UI;
 using UnityEngine;
 
 namespace Player
@@ -10,38 +11,41 @@ namespace Player
     {
         private const float JumpForce = 7f;
         private const float SideStepMultiplier = 0.25f;
-        
+
         [SerializeField] private Animator animator;
         [SerializeField] private PointsObject pointsObject;
         [SerializeField] private PathModel model;
         [SerializeField] private ParticleSystem starExplosion;
-        
-        [SerializeField] private AudioSource audioSource; 
+
+        [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip deadSound;
         [SerializeField] private AudioClip collectSound;
         [SerializeField] private AudioClip jumpSound;
         [SerializeField] private AudioClip dashSound;
         private Vector3 _lastPosition = new Vector3(0, 0, -1);
         private CharacterController _controller;
-        private float _sidestep;
+        private float _sidestep = -1;
         private float _currentJump;
         private float _heightBeforeJump;
         private float _speedMultiplier = 2f;
         private int _deadMultiplier = 1;
         private int _nextPoint = 5;
-        private int _pathNumber;
         private bool _stopMultiplier = true;
         private bool _doubleJump;
+        private Vector2 startTouchPos;
+        private Vector2 endTouchPos;
 
-        private static readonly Vector3 StartPoint = new Vector3(-0.340319f, 1.271f, 0.340319f);
+        private static readonly Vector3 StartPoint = new Vector3(0f, 1.271f, 0.340319f);
         private static readonly int Jump = Animator.StringToHash("Jump");
         private static readonly int Right = Animator.StringToHash("Right");
         private static readonly int Left = Animator.StringToHash("Left");
+        private static readonly int Move = Animator.StringToHash("Move");
 
         private void Awake()
         {
-            Supyrb.Signals.Get<DestroyPathSignal>().AddListener(HandleDestroyPathSignal);
             Supyrb.Signals.Get<StartGameSignal>().AddListener(StartGame);
+            Supyrb.Signals.Get<PauseSignal>().AddListener(Pause);
+            Supyrb.Signals.Get<UnPauseSignal>().AddListener(Pause);
         }
 
         private void StartGame()
@@ -49,9 +53,29 @@ namespace Player
             _stopMultiplier = !_stopMultiplier;
         }
 
-        private void HandleDestroyPathSignal()
+        int TouchInput()
         {
-            model.DestroyPath(_pathNumber, transform.position);
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                startTouchPos = Input.GetTouch(0).position;
+            }
+
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                endTouchPos = Input.GetTouch(0).position;
+                var x = endTouchPos.x - startTouchPos.x;
+                var y = endTouchPos.y - startTouchPos.y;
+
+                if (Math.Abs(x) > Math.Abs(y))
+                {
+                    // swipe left or right
+                    return x > 0 ? 1 : -1;
+                }
+
+                return y > 0 ? 3 : 4;
+            }
+
+            return 0;
         }
 
         private void Start()
@@ -60,14 +84,21 @@ namespace Player
             pointsObject.ResetPoints();
         }
 
+        private void Pause()
+        {
+            _stopMultiplier = !_stopMultiplier;
+        }
+
         private void Update()
         {
+            if (_controller.isGrounded) animator.SetBool(Jump, false);
+            animator.SetBool(Move, !_stopMultiplier && _deadMultiplier != 0);
             if (transform.position.z > _nextPoint && _speedMultiplier <= 3f)
             {
                 _nextPoint += 5;
                 _speedMultiplier += 0.01f;
-                model.IncreaseDifficulty(0.01f);
             }
+
             if (Input.GetKeyDown(KeyCode.P))
             {
                 _stopMultiplier = !_stopMultiplier;
@@ -88,18 +119,18 @@ namespace Player
 
         public Vector3 PlayerPos()
         {
-            var position = transform.position;
-            return _controller.isGrounded ? position : new Vector3(position.x, _heightBeforeJump, position.z);
+            return transform.position;
         }
 
         private void Movement()
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) ||
+                TouchInput() == 3)
             {
                 if (_controller.isGrounded)
                 {
                     _heightBeforeJump = transform.position.y;
-                    animator.SetTrigger(Jump);
+                    animator.SetBool(Jump, true);
                     _currentJump = JumpForce;
                     _doubleJump = false;
                     audioSource.clip = jumpSound;
@@ -109,7 +140,7 @@ namespace Player
                 {
                     if (!_doubleJump)
                     {
-                        animator.SetTrigger(Jump);
+                        animator.SetBool(Jump, true);
                         _currentJump = JumpForce;
                         _doubleJump = true;
                         audioSource.clip = jumpSound;
@@ -118,7 +149,7 @@ namespace Player
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || TouchInput() == 4)
             {
                 if (!_controller.isGrounded)
                 {
@@ -131,17 +162,17 @@ namespace Player
                 _currentJump -= JumpForce * 2 * Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || TouchInput() == -1)
             {
-                animator.SetTrigger(Left);
+                animator.SetBool(Left, true);
                 _sidestep = _sidestep != transform.position.x ? _sidestep - 1 : transform.position.x - 1f;
                 audioSource.clip = dashSound;
                 audioSource.Play();
             }
 
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || TouchInput() == 1)
             {
-                animator.SetTrigger(Right);
+                animator.SetBool(Right, true);
                 _sidestep = _sidestep != transform.position.x ? _sidestep + 1 : transform.position.x + 1f;
                 audioSource.clip = dashSound;
                 audioSource.Play();
@@ -150,16 +181,6 @@ namespace Player
 
         private void FixedUpdate()
         {
-            // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out var hit, 5f))
-            {
-                var obj = hit.collider.gameObject.GetComponent<PathObject>();
-                if (obj != null)
-                {
-                    _pathNumber = obj.GetPathNumber();
-                }
-            }
-
             if (_stopMultiplier)
             {
                 return;
@@ -168,6 +189,12 @@ namespace Player
             Vector3 moveVector = new Vector3((_sidestep - transform.position.x) * SideStepMultiplier,
                 _currentJump * Time.deltaTime, _deadMultiplier * _speedMultiplier * Time.deltaTime);
             _controller.Move(moveVector);
+            if (Math.Abs(moveVector.x) <= 0.1)
+            {
+                animator.SetBool(Right, false);
+                animator.SetBool(Left, false);
+            }
+
             if (Math.Abs(_lastPosition.z - transform.position.z) < 0.001)
             {
                 PlayerDead();
@@ -195,6 +222,7 @@ namespace Player
             {
                 return;
             }
+
             pointsObject.AddPoints(1000);
             starExplosion.gameObject.SetActive(true);
             starExplosion.Play();
@@ -218,6 +246,7 @@ namespace Player
                 return;
             }
 
+            animator.SetBool(Move, false);
             _deadMultiplier = 0;
             Supyrb.Signals.Get<PlayerDeadSignal>().Dispatch();
             audioSource.clip = deadSound;

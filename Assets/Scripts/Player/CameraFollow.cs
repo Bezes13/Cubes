@@ -9,7 +9,7 @@ namespace Player
     {
         [SerializeField] private PlayerMovement player;
 
-        public Vector3 offset = new Vector3(0f, 3f, -3.5f);
+        public Vector3 offset = new Vector3(0f, 3f, 0.35f);
 
         private void Start()
         {
@@ -21,7 +21,7 @@ namespace Player
         {
             var playerPos = player.PlayerPos();
             var newPos = new Vector3(playerPos.x, playerPos.y, playerPos.z) + offset;
-            transform.position = Vector3.Lerp(transform.position, newPos, Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, newPos, Time.deltaTime*5);
         }
     }
 }
