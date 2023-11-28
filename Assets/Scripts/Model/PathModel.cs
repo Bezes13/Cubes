@@ -15,7 +15,7 @@ namespace Model
         private static readonly Vector3 StartVec = new Vector3(-3, 0.5f, 5);
 
         [SerializeField] private PathObject pathObjectPrefab;
-        [SerializeField] private PathObject pathObjectPrefab2;
+        [SerializeField] private PathObject BigCube;
         [SerializeField] private PathObject pyramidPrefab;
         [SerializeField] private PathObject logPrefab;
         [SerializeField] private PathObject starPrefab;
@@ -27,7 +27,7 @@ namespace Model
         public enum PrefabType
         {
             Cube,
-            Cube2,
+            BigCube,
             Log,
             Pyramid,
             Star,
@@ -57,9 +57,12 @@ namespace Model
                 case PrefabType.Cube:
                     prefab = pathObjectPrefab;
                     break;
-                case PrefabType.Cube2:
-                    prefab = pathObjectPrefab2;
-                    break;
+                case PrefabType.BigCube:
+                    prefab = BigCube;
+                    var big = Instantiate(prefab, position + Vector3.up * 0.5f, Quaternion.identity, _path.transform);
+                    big.name = position.x + "/" + position.z;
+                    big.Init(_rnd.NextDouble());
+                    return;
                 case PrefabType.Coin:
                     prefab = coinPrefab;
                     break;
