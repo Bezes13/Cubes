@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Model;
 using Player;
 using Signals;
+using UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,10 +15,13 @@ namespace Path
         public Vector3 start;
         private bool _stopCreating;
         private List<int> _activeLines;
-        private List<(int, int)> _buildedLines;
+        private List<(int, int)> _builtLines;
         private Camera _camera;
         private PlayerMovement _player;
         private const int ActiveLinesRange = 7;
+        private const double StartBlockChance = 0.9;
+        private double _blockChance = 0.9;
+        private bool pause;
 
         public void Init(Vector3 startVec)
         {
@@ -37,9 +40,8 @@ namespace Path
         private void Awake()
         {
             _activeLines = new List<int>();
-            _buildedLines = new List<(int, int)>();
+            _builtLines = new List<(int, int)>();
             _player = FindObjectOfType<PlayerMovement>();
-            //Supyrb.Signals.Get<StartGameSignal>().AddListener(CreatePath);
         }
 
         private void OnDestroy()
@@ -64,8 +66,13 @@ namespace Path
                 var line = (int)start.x + (int)_player.transform.position.x + i;
                 _activeLines.Add(line);
             }
-            
+
             ContinuePath();
+        }
+
+        private void FixedUpdate()
+        {
+            _blockChance = StartBlockChance - Math.Min(0.7, start.z * 0.01);
         }
 
         private void ContinuePath()
@@ -88,49 +95,38 @@ namespace Path
 
         private void CreatePath()
         {
-            _buildedLines.RemoveAll(tuple => _activeLines.Contains(tuple.Item1));
+            _builtLines.RemoveAll(tuple => _activeLines.Contains(tuple.Item1));
             foreach (var line in _activeLines)
             {
                 CreateAtPos(new Vector3(line, start.y, start.z));
-                _buildedLines.Add((line, (int) start.z + 1));
+                _builtLines.Add((line, (int)start.z + 1));
             }
         }
 
         private void BuildLine(int line)
         {
-            var start = (int)_player.PlayerPos().z;
-            var buildLine = _buildedLines.FindAll(tuple => tuple.Item1 == line);
+            var startLine = (int)_player.PlayerPos().z;
+            var buildLine = _builtLines.FindAll(tuple => tuple.Item1 == line);
             if (buildLine.Count == 1)
             {
-                start = buildLine[0].Item2;
+                startLine = buildLine[0].Item2;
             }
 
-            var end = (int)this.start.z + 1;
-            for (int i = start; i < end; i++)
+            var end = (int)start.z + 1;
+            for (var i = startLine; i < end; i++)
             {
                 CreateAtPos(new Vector3(line, this.start.y, i));
             }
 
-            _buildedLines.Add((line, end + 1));
+            _builtLines.Add((line, end + 1));
         }
 
         private void CreateAtPos(Vector3 position)
         {
-            print(this.gameObject.GetInstanceID());
-            print(position.z);
+            if (!(Random.value <= _blockChance)) return;
             pathModel.CreatePathObject(PathModel.PrefabType.Cube, position);
-            if (Random.value <= 0.3)
-            {
-                pathModel.CreatePathObject(PathModel.PrefabType.Cube, position + Vector3.up);
-                if (Random.value <= 0.1)
-                {
-                    pathModel.CreatePathObject(PathModel.PrefabType.Coin, position + Vector3.up*2);
-                }
-            }
-            if (Random.value >= 0.9)
-            {
-                pathModel.CreatePathObject(PathModel.PrefabType.Coin, position + Vector3.up);
-            }
+            if (!(Random.value <= 0.05)) return;
+            pathModel.CreatePathObject(PathModel.PrefabType.Cube, position + Vector3.up);
         }
     }
 }

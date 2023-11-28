@@ -217,13 +217,12 @@ namespace Player
                 PlayerDead();
             }
 
-            var star = other.GetComponent<CollectableStar>();
+            var star = other.GetComponent<CollectableCoin>();
             if (star == null)
             {
                 return;
             }
-
-            pointsObject.AddPoints(1000);
+            
             starExplosion.gameObject.SetActive(true);
             starExplosion.Play();
             audioSource.clip = collectSound;

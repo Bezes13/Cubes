@@ -31,11 +31,6 @@ namespace Objects
             _seed = seed;
         }
 
-        public int GetPathNumber()
-        {
-            return _pathNumber;
-        }
-
         public void Kill()
         {
             _dieHard = true;
@@ -85,6 +80,7 @@ namespace Objects
             var obj = other.GetComponent<Projectile>();
             if (obj != null)
             {
+                _player.GetComponent<Weapon>().CollectBlock();
                 Destroy(gameObject);
             }
         }
