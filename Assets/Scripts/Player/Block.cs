@@ -10,21 +10,21 @@ namespace Objects
         private GameObject block;
         [SerializeField]
         private Transform bottom;
-        private AudioSource audioSource;
+        private AudioSource _audioSource;
 
         private PlayerMovement _player;
         
-        private Vector3 goTo;
-        private bool placed;
-        private GameObject lastHit;
+        private Vector3 _goTo;
+        private bool _placed;
+        private GameObject _lastHit;
 
         private void Start()
         {
             _player = FindObjectOfType<PlayerMovement>();
-            audioSource = GetComponent<AudioSource>();
+            _audioSource = GetComponent<AudioSource>();
             if (!Physics.Raycast(_player.transform.position, Vector3.down))
             {
-                placed = true;
+                _placed = true;
                 transform.position = transform.position + Vector3.down*2 + Vector3.back;
                 
             }
@@ -33,7 +33,7 @@ namespace Objects
         private void Update()
         {
             // After its placed, Destroy it, after the player passed it.
-            if(placed)
+            if(_placed)
             {
                 if (_player.PlayerPos().z > transform.position.z + 1.5)
                 {
@@ -42,25 +42,23 @@ namespace Objects
                 return;
             }
             // When we are above an empty spot
-            if (goTo != default && lastHit != default)
+            if (_goTo != default && _lastHit != default)
             {
                 // Move over the spot
-                if (transform.position.z < goTo.z)
+                if (transform.position.z < _goTo.z)
                 {
                     transform.Translate(Vector3.forward * (Speed * Time.deltaTime));
                     return;
                 }
                 // Get down in the spot
-                if (transform.position.y > goTo.y)
+                if (transform.position.y > _goTo.y)
                 {
                     transform.Translate(Vector3.down * (Speed * Time.deltaTime));
                     return;
                 }
-                print(goTo);
-                print("placed");
-                transform.position = new Vector3(transform.position.x, goTo.y, goTo.z);
-                placed = true;
-                audioSource.Play();
+                transform.position = new Vector3(transform.position.x, _goTo.y, _goTo.z);
+                _placed = true;
+                _audioSource.Play();
                 return;
             }
             
@@ -68,17 +66,17 @@ namespace Objects
             // Find the next Free Spot
             if (Physics.Raycast(bottom.position, Vector3.down, out var hit))
             {
-                lastHit = hit.collider.gameObject;
+                _lastHit = hit.collider.gameObject;
                 return;
             }
 
-            if (lastHit)
+            if (_lastHit)
             {
-                goTo = lastHit.transform.position + Vector3.forward;
+                _goTo = _lastHit.transform.position + Vector3.forward;
             }
             else
             {
-                placed = true;
+                _placed = true;
                 transform.position = transform.position + Vector3.down*2 + Vector3.back;
             }
                 

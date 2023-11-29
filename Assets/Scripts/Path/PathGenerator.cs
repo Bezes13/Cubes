@@ -14,25 +14,24 @@ namespace Path
         public Vector3 start;
         private bool _stopCreating;
         private List<int> _activeLines;
-        private List<(int, int)> _builtLines;
         private List<PathPart> _pathParts;
         private Camera _camera;
         private PlayerMovement _player;
         private const int ActiveLinesRange = 5;
         private double _difficulty;
-        private bool pause;
+        private bool _pause;
 
         private enum PathPart
         {
             ClassicEasy, // Underground with 2 Blocks on Top
             ClassicMiddle, // Underground with Big Blocks and normal Blocks
-            ClassicHard, // Underground with Bigblocks
+            ClassicHard, // Underground with BigBlocks
             BridgeEasy, // Just the Block in the middle
             BridgeMiddle,
             BridgeHard,
-            JumpesEasy,
-            JumpesMidlle,
-            JumpesHard,
+            JumpEasy,
+            JumpMedium,
+            JumpHard,
             Empty
         }
 
@@ -53,7 +52,6 @@ namespace Path
         private void Awake()
         {
             _activeLines = new List<int>();
-            _builtLines = new List<(int, int)>();
             _pathParts = new List<PathPart>();
             _player = FindObjectOfType<PlayerMovement>();
         }
@@ -115,17 +113,14 @@ namespace Path
         {
             if (value >= 0.66 && _pathParts[_pathParts.Count-1] != PathPart.ClassicHard)
             {
-                print("ClassicHard");
                 AddToPath(PathPart.ClassicHard,10);
                 return;
             }
-            if (value >= 0.33 && _pathParts[_pathParts.Count-1] != PathPart.JumpesHard)
+            if (value >= 0.33 && _pathParts[_pathParts.Count-1] != PathPart.JumpHard)
             {
-                print("JumpHard");
-                AddToPath(PathPart.JumpesHard,10);
+                AddToPath(PathPart.JumpHard,10);
                 return;
             }
-            print("BridgeHard");
             AddToPath(PathPart.BridgeEasy,3);
             AddToPath(PathPart.BridgeHard,1);
             AddToPath(PathPart.BridgeEasy,3);
@@ -137,17 +132,14 @@ namespace Path
         {
             if (value >= 0.66)
             {
-                print("ClassicMiddle");
                 AddToPath(PathPart.ClassicMiddle,10);
                 return;
             }
             if (value >= 0.33)
             {
-                print("JumpesMiddle");
-                AddToPath(PathPart.JumpesMidlle,10);
+                AddToPath(PathPart.JumpMedium,10);
                 return;
             }
-            print("BridgeMiddle");
             AddToPath(PathPart.BridgeEasy,2);
             AddToPath(PathPart.BridgeMiddle,1);
             AddToPath(PathPart.BridgeEasy,2);
@@ -159,20 +151,17 @@ namespace Path
         {
             if (value >= 0.66)
             {
-                print("ClassicEasy");
                 AddToPath(PathPart.ClassicEasy,10);
                 return;
             }
             if (value >= 0.33)
             {
-                print("JumpesEasy");
-                AddToPath(PathPart.JumpesEasy,10);
+                AddToPath(PathPart.JumpEasy,10);
                 return;
             }
 
             if (_pathParts.Count > 0 && _pathParts[_pathParts.Count - 1] != PathPart.BridgeEasy)
             {
-                print("BrdigeEasy");
                 AddToPath(PathPart.BridgeEasy,2);    
             }
             else
@@ -273,7 +262,7 @@ namespace Path
                         pathModel.CreatePathObject(PathModel.PrefabType.Coin, new Vector3(line, start.y + 2.5f, start.z));
                     }
                     break;
-                case PathPart.JumpesEasy:
+                case PathPart.JumpEasy:
                     pos1 = GetRightLine(Random.value, _activeLines);
                     bigOne = GetRightLine(Random.value, _activeLines);
                     while (pos1 == bigOne)
@@ -289,7 +278,7 @@ namespace Path
                     }
 
                     break;
-                case PathPart.JumpesMidlle:
+                case PathPart.JumpMedium:
                     pos1 = GetRightLine(Random.value, _activeLines);
                     var pos2 = GetRightLine(Random.value, _activeLines);
                     while (pos1 == pos2)
@@ -301,7 +290,7 @@ namespace Path
                     pathModel.CreatePathObject(PathModel.PrefabType.Cube,
                         new Vector3(_activeLines[pos2], start.y, start.z));
                     break;
-                case PathPart.JumpesHard:
+                case PathPart.JumpHard:
                     pos1 = GetRightLine(Random.value, _activeLines);
                     pathModel.CreatePathObject(PathModel.PrefabType.Cube,
                         new Vector3(_activeLines[pos1], start.y, start.z));

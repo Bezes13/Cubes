@@ -22,10 +22,10 @@ namespace Player
         [SerializeField] private TextMeshProUGUI blockAmount;
         [SerializeField] private Image coinButton;
         [SerializeField] private Image blockButton;
-        private List<GameObject> spawned;
+        private List<GameObject> _spawned;
         private const float Cooldown = 1f;
 
-        private AudioSource audioSource;
+        private AudioSource _audioSource;
         [SerializeField] private AudioClip blockSound;
         [SerializeField] private AudioClip coinSound;
         private bool _coinReloading;
@@ -34,10 +34,10 @@ namespace Player
         private double _coinTimeOut;
 
         // This is called when the bullet instance is created
-        void Start()
+        private void Start()
         {
-            audioSource = GetComponent<AudioSource>();
-            spawned = new List<GameObject>();
+            _audioSource = GetComponent<AudioSource>();
+            _spawned = new List<GameObject>();
             coinAmount.text = _coinInventory.ToString();
             blockAmount.text = _blockInventory.ToString();
             Supyrb.Signals.Get<StartGameSignal>().AddListener(StartGame);
@@ -55,12 +55,12 @@ namespace Player
             _blockInventory = StartAmount;
             coinAmount.text = _coinInventory.ToString();
             blockAmount.text = _blockInventory.ToString();
-            foreach (var spawnedBlock in spawned)
+            foreach (var spawnedBlock in _spawned)
             {
                 Destroy(spawnedBlock);
             }
 
-            spawned.Clear();
+            _spawned.Clear();
         }
 
         public void CollectBlock()
@@ -79,8 +79,8 @@ namespace Player
             Instantiate(coin, shotSpawn.position, shotSpawn.rotation);
             _coinInventory--;
             coinAmount.text = _coinInventory.ToString();
-            audioSource.clip = coinSound;
-            audioSource.Play();
+            _audioSource.clip = coinSound;
+            _audioSource.Play();
             StartCoroutine(Countdown(true));
         }
 
@@ -92,11 +92,11 @@ namespace Player
             }
 
             var obj = Instantiate(block, blockSpawn.position, blockSpawn.rotation);
-            spawned.Add(obj);
+            _spawned.Add(obj);
             _blockInventory--;
             blockAmount.text = _blockInventory.ToString();
-            audioSource.clip = blockSound;
-            audioSource.Play();
+            _audioSource.clip = blockSound;
+            _audioSource.Play();
             StartCoroutine(Countdown(false));
         }
 

@@ -14,7 +14,6 @@ namespace Player
 
         [SerializeField] private Animator animator;
         [SerializeField] private PointsObject pointsObject;
-        [SerializeField] private PathModel model;
         [SerializeField] private ParticleSystem starExplosion;
 
         [SerializeField] private AudioSource audioSource;
@@ -32,8 +31,8 @@ namespace Player
         private int _nextPoint = 5;
         private bool _stopMultiplier = true;
         private bool _doubleJump;
-        private Vector2 startTouchPos;
-        private Vector2 endTouchPos;
+        private Vector2 _startTouchPos;
+        private Vector2 _endTouchPos;
 
         private static readonly Vector3 StartPoint = new Vector3(0f, 1.271f, 0.340319f);
         private static readonly int Jump = Animator.StringToHash("Jump");
@@ -57,14 +56,14 @@ namespace Player
         {
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                startTouchPos = Input.GetTouch(0).position;
+                _startTouchPos = Input.GetTouch(0).position;
             }
 
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                endTouchPos = Input.GetTouch(0).position;
-                var x = endTouchPos.x - startTouchPos.x;
-                var y = endTouchPos.y - startTouchPos.y;
+                _endTouchPos = Input.GetTouch(0).position;
+                var x = _endTouchPos.x - _startTouchPos.x;
+                var y = _endTouchPos.y - _startTouchPos.y;
 
                 if (Math.Abs(x) > Math.Abs(y))
                 {

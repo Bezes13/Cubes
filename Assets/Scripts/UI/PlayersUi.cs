@@ -4,6 +4,7 @@ using Model;
 using Signals;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UI
 {
@@ -18,8 +19,8 @@ namespace UI
         [SerializeField] private TextMeshProUGUI pathWarning;
         [SerializeField] private PointsObject pointsObject;
         [SerializeField] private GameObject warningImage;
-        [SerializeField] private GameObject PauseText;
-        [SerializeField] private GameObject ContinueButton;
+        [FormerlySerializedAs("PauseText")] [SerializeField] private GameObject pauseText;
+        [FormerlySerializedAs("ContinueButton")] [SerializeField] private GameObject continueButton;
 
         private bool _isActive;
 
@@ -37,15 +38,15 @@ namespace UI
         public void PauseGame()
         {
             Supyrb.Signals.Get<PauseSignal>().Dispatch();
-            PauseText.SetActive(!PauseText.activeSelf);
-            ContinueButton.SetActive(!ContinueButton.activeSelf);
+            pauseText.SetActive(!pauseText.activeSelf);
+            continueButton.SetActive(!continueButton.activeSelf);
         }
 
         public void UnPauseGame()
         {
             Supyrb.Signals.Get<UnPauseSignal>().Dispatch();
-            PauseText.SetActive(false);
-            ContinueButton.SetActive(false);
+            pauseText.SetActive(false);
+            continueButton.SetActive(false);
         }
 
         private void Warning()

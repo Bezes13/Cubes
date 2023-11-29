@@ -1,6 +1,7 @@
 using Objects;
 using Path;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 namespace Model
@@ -15,10 +16,9 @@ namespace Model
         private static readonly Vector3 StartVec = new Vector3(-2, 0.5f, 5);
 
         [SerializeField] private PathObject pathObjectPrefab;
-        [SerializeField] private PathObject BigCube;
+        [FormerlySerializedAs("BigCube")] [SerializeField] private PathObject bigCube;
         [SerializeField] private PathObject pyramidPrefab;
         [SerializeField] private PathObject logPrefab;
-        [SerializeField] private PathObject starPrefab;
         [SerializeField] private PathObject coinPrefab;
 
         private Random _rnd;
@@ -30,7 +30,6 @@ namespace Model
             BigCube,
             Log,
             Pyramid,
-            Star,
             Coin
         }
 
@@ -58,7 +57,7 @@ namespace Model
                     prefab = pathObjectPrefab;
                     break;
                 case PrefabType.BigCube:
-                    prefab = BigCube;
+                    prefab = bigCube;
                     var big = Instantiate(prefab, position + Vector3.up * 0.5f, Quaternion.identity, _path.transform);
                     big.name = position.x + "/" + position.z;
                     big.Init(_rnd.NextDouble());

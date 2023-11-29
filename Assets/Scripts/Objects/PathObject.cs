@@ -34,7 +34,7 @@ namespace Objects
         public void Kill()
         {
             _dieHard = true;
-            Destroy(gameObject, 1f + (float) _seed);
+            Destroy(gameObject, 1f + (float)_seed);
         }
 
         private void DieHard()
@@ -63,7 +63,7 @@ namespace Objects
             if (_dieHard)
             {
                 var pos1 = transform.position;
-                var position = new Vector3(pos1.x, pos1.y - Time.deltaTime * FallSpeed * (float) _seed, pos1.z);
+                var position = new Vector3(pos1.x, pos1.y - Time.deltaTime * FallSpeed * (float)_seed, pos1.z);
                 transform.position = position;
             }
             else
@@ -74,7 +74,7 @@ namespace Objects
                 }
             }
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             var obj = other.GetComponent<Projectile>();
