@@ -10,6 +10,8 @@ namespace Objects
         private GameObject block;
         [SerializeField]
         private Transform bottom;
+        [SerializeField]
+        private Transform front;
         private AudioSource _audioSource;
 
         private PlayerMovement _player;
@@ -22,7 +24,7 @@ namespace Objects
         {
             _player = FindObjectOfType<PlayerMovement>();
             _audioSource = GetComponent<AudioSource>();
-            if (!Physics.Raycast(_player.transform.position, Vector3.down))
+            if (!Physics.Raycast(_player.transform.position, Vector3.down, 2))
             {
                 _placed = true;
                 transform.position = transform.position + Vector3.down*2 + Vector3.back;
@@ -63,8 +65,14 @@ namespace Objects
             }
             
             transform.Translate(Vector3.forward * (Speed * Time.deltaTime));
+            if (Physics.Raycast(front.position, Vector3.forward,out var hit, 0.1f))
+            {
+                _placed = true;
+                transform.position = new Vector3(transform.position.x, hit.collider.transform.position.y, hit.collider.transform.position.z-1);
+                return;
+            }
             // Find the next Free Spot
-            if (Physics.Raycast(bottom.position, Vector3.down, out var hit))
+            if (Physics.Raycast(bottom.position, Vector3.down, out hit))
             {
                 _lastHit = hit.collider.gameObject;
                 return;

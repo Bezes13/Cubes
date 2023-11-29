@@ -52,7 +52,7 @@ namespace Player
             _stopMultiplier = !_stopMultiplier;
         }
 
-        int TouchInput()
+        private int TouchInput()
         {
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
