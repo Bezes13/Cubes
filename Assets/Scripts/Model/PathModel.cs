@@ -12,7 +12,7 @@ namespace Model
     [CreateAssetMenu(fileName = "Model", menuName = "ScriptableObjects/SpawnManagerScriptableObject", order = 1)]
     public class PathModel : ScriptableObject
     {
-        private static readonly Vector3 StartVec = new Vector3(-3, 0.5f, 5);
+        private static readonly Vector3 StartVec = new Vector3(-2, 0.5f, 5);
 
         [SerializeField] private PathObject pathObjectPrefab;
         [SerializeField] private PathObject BigCube;

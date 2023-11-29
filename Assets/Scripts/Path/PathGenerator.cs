@@ -18,7 +18,7 @@ namespace Path
         private List<PathPart> _pathParts;
         private Camera _camera;
         private PlayerMovement _player;
-        private const int ActiveLinesRange = 7;
+        private const int ActiveLinesRange = 5;
         private double _difficulty;
         private bool pause;
 
@@ -65,22 +65,6 @@ namespace Path
 
         private void Update()
         {
-            for (int i = 0; i < ActiveLinesRange; i++)
-            {
-                var line = (int)start.x + (int)_player.transform.position.x + i;
-                if (!_activeLines.Contains(line))
-                {
-                    BuildLine(line);
-                }
-            }
-
-            _activeLines.Clear();
-            for (int i = 0; i < ActiveLinesRange; i++)
-            {
-                var line = (int)start.x + (int)_player.transform.position.x + i;
-                _activeLines.Add(line);
-            }
-
             ContinuePath();
         }
 
@@ -124,6 +108,7 @@ namespace Path
                 return;
             }
             EasyPath(Random.value);
+            AddToPath(PathPart.Empty,1);
         }
 
         private void HardPath(float value)
@@ -163,9 +148,9 @@ namespace Path
                 return;
             }
             print("BridgeMiddle");
-            AddToPath(PathPart.BridgeEasy,3);
+            AddToPath(PathPart.BridgeEasy,2);
             AddToPath(PathPart.BridgeMiddle,1);
-            AddToPath(PathPart.BridgeEasy,3);
+            AddToPath(PathPart.BridgeEasy,2);
             AddToPath(PathPart.BridgeMiddle,1);
             AddToPath(PathPart.BridgeEasy,2);
         }
@@ -188,7 +173,7 @@ namespace Path
             if (_pathParts.Count > 0 && _pathParts[_pathParts.Count - 1] != PathPart.BridgeEasy)
             {
                 print("BrdigeEasy");
-                AddToPath(PathPart.BridgeEasy,5);    
+                AddToPath(PathPart.BridgeEasy,2);    
             }
             else
             {
@@ -207,13 +192,6 @@ namespace Path
 
         private void CreatePath()
         {
-            // Remove the activeLines from the buildedLines to add the updated one 
-            _builtLines.RemoveAll(tuple => _activeLines.Contains(tuple.Item1));
-            foreach (var line in _activeLines)
-            {
-                _builtLines.Add((line, (int)start.z + 1));
-            }
-            
             switch (_pathParts[(int)start.z - 5])
             {
                 case PathPart.ClassicEasy:
@@ -290,6 +268,10 @@ namespace Path
                         new Vector3(_activeLines[_activeLines.Count / 2 - 1], start.y, start.z));
                     break;
                 case PathPart.Empty:
+                    foreach (var line in _activeLines)
+                    {
+                        pathModel.CreatePathObject(PathModel.PrefabType.Coin, new Vector3(line, start.y + 2.5f, start.z));
+                    }
                     break;
                 case PathPart.JumpesEasy:
                     pos1 = GetRightLine(Random.value, _activeLines);
@@ -316,7 +298,7 @@ namespace Path
                     }
                     pathModel.CreatePathObject(PathModel.PrefabType.Cube,
                         new Vector3(_activeLines[pos1], start.y, start.z));
-                    pathModel.CreatePathObject(PathModel.PrefabType.BigCube,
+                    pathModel.CreatePathObject(PathModel.PrefabType.Cube,
                         new Vector3(_activeLines[pos2], start.y, start.z));
                     break;
                 case PathPart.JumpesHard:
@@ -338,24 +320,6 @@ namespace Path
             }
 
             throw new Exception();
-        }
-
-        private void BuildLine(int line)
-        {
-            var startLine = (int)_player.PlayerPos().z;
-            var buildLine = _builtLines.FindAll(tuple => tuple.Item1 == line);
-            if (buildLine.Count == 1)
-            {
-                startLine = buildLine[0].Item2;
-            }
-
-            var end = (int)start.z + 1;
-            for (var i = startLine; i < end; i++)
-            {
-                CreateAtPos(new Vector3(line, this.start.y, i));
-            }
-
-            _builtLines.Add((line, end + 1));
         }
 
         private void CreateAtPos(Vector3 position)

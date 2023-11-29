@@ -22,6 +22,12 @@ namespace Objects
         {
             _player = FindObjectOfType<PlayerMovement>();
             audioSource = GetComponent<AudioSource>();
+            if (!Physics.Raycast(_player.transform.position, Vector3.down))
+            {
+                placed = true;
+                transform.position = transform.position + Vector3.down*2 + Vector3.back;
+                
+            }
         }
 
         private void Update()
@@ -65,8 +71,17 @@ namespace Objects
                 lastHit = hit.collider.gameObject;
                 return;
             }
-            if(lastHit)
+
+            if (lastHit)
+            {
                 goTo = lastHit.transform.position + Vector3.forward;
+            }
+            else
+            {
+                placed = true;
+                transform.position = transform.position + Vector3.down*2 + Vector3.back;
+            }
+                
         }
 
         public void OnBecameInvisible()
